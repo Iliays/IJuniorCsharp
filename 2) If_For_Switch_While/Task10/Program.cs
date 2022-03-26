@@ -14,7 +14,9 @@ namespace Task10
 			 */
 
 			Random number = new Random();
-			int randomNumber = number.Next(1, 100);
+			int minimumRandomNumber = 1;
+			int maximumRandomNumber = 100;
+			int randomNumber = number.Next(minimumRandomNumber, maximumRandomNumber);
 			int degree = 2;
 			int numberToDegree = 2;
 			int degreeLevel = 1;
