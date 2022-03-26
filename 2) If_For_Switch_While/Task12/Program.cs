@@ -35,42 +35,45 @@ namespace Task12
 			float skillGatlingDamage = 100;
 			int skillHealInPercent = 20;
 			int skillHealCountUse = 2;
+			int oneHundredPercent = 100;
 
 			while (bossHealth > 0 && heroHealth > 0)
 			{
 				Console.WriteLine($"Здоровье босса: {bossHealth}\nВаше здоровье: {heroHealth}");
 
-				Console.WriteLine("Выберите заклинание:\n1 - Второй гир - увеличивает вашу скорость (Отнимает 20% хп игроку)\n" +
-					"2 - Скоростной пистолет - быстрая и сильная атака рукой (Может быть выполнено только во время второго гира), наносит 50 урона\n" +
-					"3 - Гатлинг - серия быстрых ударов, наносит 100 урона\n" +
-					"4 - Съесть мясо - восстанавливает здоровье на 20% от максимального (Использолвать можно только 2 раза)");
+				Console.WriteLine($"Выберите заклинание:\n1 - Второй гир - увеличивает вашу скорость (Отнимает {damageFromSecondGearToHeroInPercent}% хп игроку)\n" +
+					$"2 - Скоростной пистолет - быстрая и сильная атака рукой (Может быть выполнено только во время второго гира), наносит {skillSpeedGunDamage} урона\n" +
+					$"3 - Гатлинг - серия быстрых ударов, наносит {skillGatlingDamage} урона\n" +
+					$"4 - Съесть мясо - восстанавливает здоровье на {skillHealInPercent}% от максимального (Использолвать можно только {skillHealCountUse} раза)");
 				userInputSelector = Console.ReadLine();
 
 				switch (userInputSelector)
 				{
 					case "1":
 						secondGearActivated = true;
-						heroHealth -= heroHealth / 100 * damageFromSecondGearToHeroInPercent;
+						heroHealth -= heroHealth / oneHundredPercent * damageFromSecondGearToHeroInPercent;
 						break;
 					case "2":
 						if (secondGearActivated)
 						{
 							bossHealth -= skillSpeedGunDamage;
-							heroHealth -= skillSpeedGunDamage / 100 * bossReverseDamageInPercent;
+							heroHealth -= skillSpeedGunDamage / oneHundredPercent * bossReverseDamageInPercent;
 						}
 						break;
 					case "3":
 						bossHealth -= skillGatlingDamage;
-						heroHealth -= skillGatlingDamage / 100 * bossReverseDamageInPercent;
+						heroHealth -= skillGatlingDamage / oneHundredPercent * bossReverseDamageInPercent;
 						break;
 					case "4":
 						if (heroHealthMaximum > heroHealth && skillHealCountUse > 0)
 						{
-							heroHealth += heroHealthMaximum / 100 * skillHealInPercent;
+							heroHealth += heroHealthMaximum / oneHundredPercent * skillHealInPercent;
 							skillHealCountUse--;
 						}
 						else
+						{
 							Console.WriteLine("Вы съели всё мясо, больше нельзя востановить здоровье.");
+						}
 						break;
 				}
 			}
@@ -84,7 +87,9 @@ namespace Task12
 				Console.WriteLine("Ничья, вы останетесь неизвестным никому героем!");
 			}
 			else
+			{
 				Console.WriteLine("К сожелению вы проиграли и теперь миру конец)");
+			}
 		}
 	}
 }
