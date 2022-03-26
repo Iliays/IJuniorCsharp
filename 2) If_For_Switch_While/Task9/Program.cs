@@ -14,16 +14,18 @@ namespace Task9
 			int minimumNumber = 1;
 			int maximumNumber = 27;
 			int naturalNumbersSum = 0;
+			int minimumThreeDegitNumber = 100;
+			int maximumThreeDigitNumber = 1000;
 
 			Console.WriteLine($"Введите число в данном диапозоне {minimumNumber} <= N <= {maximumNumber}");
 			int userInput = Convert.ToInt32(Console.ReadLine());
 			int numberToCompare = userInput;
 
-			while (numberToCompare < 999)
+			while (numberToCompare < maximumThreeDigitNumber)
 			{
-				for (int i = 0; i < 999; i++)
+				for (int i = 0; i < maximumThreeDigitNumber; i++)
 				{
-					if (i > 100 && i < 999)
+					if (i > minimumThreeDegitNumber && i < maximumThreeDigitNumber)
 					{
 						if (i == numberToCompare)
 						{
