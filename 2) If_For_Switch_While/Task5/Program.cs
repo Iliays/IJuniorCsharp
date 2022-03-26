@@ -16,8 +16,15 @@ namespace Task5
 			 * Программа должна завершиться тогда, когда это решит пользователь.
 			 */
 
-			int rubleToDollar = 82, dollarToRuble = 80, euroToRuble = 90, rubleToEuro = 88, euroToDollar = 1, dollarToEuro = 2;
-			float dollar = 10, ruble = 200, euro = 5;
+			int rubleToDollar = 82;
+			int dollarToRuble = 80;
+			int euroToRuble = 90;
+			int rubleToEuro = 88;
+			int euroToDollar = 1; 
+			int dollarToEuro = 2;
+			float dollar = 10;
+			float ruble = 200;
+			float euro = 5;
 			float countToTransferMoney;
 			string functionSelector;
 			bool isExit = true;
@@ -58,7 +65,7 @@ namespace Task5
 						if (euro >= countToTransferMoney)
 						{
 							euro -= countToTransferMoney;
-							ruble += countToTransferMoney * euroToRuble;
+							ruble += countToTransferMoney / euroToRuble;
 						}
 						else
 						{
@@ -100,7 +107,7 @@ namespace Task5
 						if (dollar >= countToTransferMoney)
 						{
 							dollar -= countToTransferMoney;
-							ruble += countToTransferMoney * dollarToRuble;
+							ruble += countToTransferMoney / dollarToRuble;
 						}
 						else
 						{
