@@ -30,7 +30,7 @@ namespace Task4
 			}
 
 			Console.WriteLine("Случайное число " + randomNumber);
-			Console.WriteLine("Сумма чисел кратных 3 или 5 = " + sumPositiveNumbers);
+			Console.WriteLine($"Сумма чисел кратных {multiplicityOfThree} или {multiplicityOfFive} = " + sumPositiveNumbers);
 		}
 	}
 }
