@@ -13,15 +13,11 @@ namespace Task2
 			 */
 
 			string userInput;
+			userInput = Console.ReadLine();
 
-			while (true)
+			while (userInput != "exit")
 			{
 				userInput = Console.ReadLine();
-
-				if (userInput == "exit")
-				{
-					break;
-				}
 			}
 		}
 	}
