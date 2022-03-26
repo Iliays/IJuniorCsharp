@@ -20,18 +20,18 @@ namespace Task5
 			int dollarToRuble = 80;
 			int euroToRuble = 90;
 			int rubleToEuro = 88;
-			int euroToDollar = 1; 
+			int euroToDollar = 1;
 			int dollarToEuro = 2;
 			float dollar = 10;
 			float ruble = 200;
 			float euro = 5;
 			float countToTransferMoney;
 			string functionSelector;
-			bool isExit = true;
+			bool completeTransaction = false;
 
 			Console.WriteLine("Добро пожаловать в обменник валюты!!!");
 
-			while (isExit)
+			while (!completeTransaction)
 			{
 				Console.WriteLine($"Ваш баланс {ruble} рублей, {dollar} долларов, {euro} евро.");
 				Console.WriteLine("Выберите услугу:\n1 - перевод из евро в доллары\n2 - перевод из евро в рубли\n" +
@@ -42,7 +42,7 @@ namespace Task5
 				switch (functionSelector)
 				{
 					case "0":
-						isExit = false;
+						completeTransaction = true;
 						break;
 					case "1":
 						Console.WriteLine("Обмен евро на доллары");
