@@ -13,10 +13,10 @@ namespace Task10
 			 * В консоль вывести число (лучше получить от Random), степень и само число 2 в найденной степени.
 			 */
 
-			Random number = new Random();
+			Random random = new Random();
 			int minimumRandomNumber = 1;
 			int maximumRandomNumber = 100;
-			int randomNumber = number.Next(minimumRandomNumber, maximumRandomNumber);
+			int randomNumber = random.Next(minimumRandomNumber, maximumRandomNumber);
 			int degree = 2;
 			int numberToDegree = 2;
 			int degreeLevel = 1;
