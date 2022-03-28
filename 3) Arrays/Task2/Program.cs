@@ -17,8 +17,6 @@ namespace Task2
 			int minimumRandomNumber = 1;
 			int maximumRandomNumber = 50;
 			int maximumArrayElement = int.MinValue;
-			int indexLineMaximumElement = 0;
-			int indexColumnMaximumElement = 0;
 
 			Console.WriteLine("Исходная матрица\n");
 
@@ -32,17 +30,23 @@ namespace Task2
 					if (maximumArrayElement < intArray[i, j])
 					{
 						maximumArrayElement = intArray[i, j];
-						indexLineMaximumElement = i;
-						indexColumnMaximumElement = j;
 					}
 				}
 				Console.WriteLine();
 			}
 
-			intArray[indexLineMaximumElement, indexColumnMaximumElement] = 0;
+			for (int i = 0; i < intArray.GetLength(0); i++)
+			{
+				for (int j = 0; j < intArray.GetLength(1); j++)
+				{
+					if(maximumArrayElement == intArray[i, j])
+					{
+						intArray[i, j] = 0;
+					}
+				}
+			}
 
 			Console.WriteLine("\n\nМаксимальное число - " + maximumArrayElement);
-			Console.WriteLine($"Строка - {indexLineMaximumElement + 1}\nСтолбец {indexColumnMaximumElement + 1}");
 			Console.WriteLine("\nПолученная матрица\n");
 
 			for (int i = 0; i < intArray.GetLength(0); i++)
