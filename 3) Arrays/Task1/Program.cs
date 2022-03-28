@@ -32,7 +32,7 @@ namespace Task1
 				Console.WriteLine();
 			}
 
-			for (int i = 0; i < intArray.GetLength(0); i++)
+			for (int i = indexLineToSum; i < intArray.GetLength(0); i++)
 			{
 				for (int j = 0; j < intArray.GetLength(1); j++)
 				{
@@ -40,6 +40,13 @@ namespace Task1
 					{
 						sumLine += intArray[i, j];
 					}
+				}
+			}
+
+			for (int i = 0; i < intArray.GetLength(0); i++)
+			{
+				for (int j = indexColumnToMultyply; j < intArray.GetLength(1); j++)
+				{
 					if (j == indexColumnToMultyply)
 					{
 						multiplyColumn *= intArray[i, j];
