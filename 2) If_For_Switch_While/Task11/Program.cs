@@ -40,7 +40,9 @@ namespace Task11
 				Console.WriteLine($"{inputUser} - строка корректная и максимум глубины равняется {depth}");
 			}
 			else
+			{
 				Console.WriteLine($"{inputUser} - строка является некорректной");
+			}
 		}
 	}
 }

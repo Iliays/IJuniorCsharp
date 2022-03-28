@@ -12,13 +12,17 @@ namespace Task4
 			 * которые кратные 3 или 5. (К примеру, это числа 3, 5, 6, 9, 10, 12, 15 и т.д.)
 			 */
 
-			Random number = new Random();
-			int randomNumber = number.Next(0, 100);
+			Random random = new Random();
+			int minimumRandomNumber = 0;
+			int maximumRandomNumber = 100;
+			int randomNumber = random.Next(minimumRandomNumber, maximumRandomNumber);
 			int sumPositiveNumbers = 0;
+			int multiplicityOfThree = 3;
+			int multiplicityOfFive = 5;
 
 			for (int i = 1; i <= randomNumber; i++)
 			{
-				if (i % 3 == 0 || i % 5 == 0)
+				if (i % multiplicityOfThree == 0 || i % multiplicityOfFive == 0)
 				{
 					sumPositiveNumbers += i;
 					Console.WriteLine(i);
@@ -26,7 +30,7 @@ namespace Task4
 			}
 
 			Console.WriteLine("Случайное число " + randomNumber);
-			Console.WriteLine("Сумма чисел кратных 3 или 5 = " + sumPositiveNumbers);
+			Console.WriteLine($"Сумма чисел кратных {multiplicityOfThree} или {multiplicityOfFive} = " + sumPositiveNumbers);
 		}
 	}
 }
