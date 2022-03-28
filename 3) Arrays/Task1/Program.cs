@@ -31,12 +31,12 @@ namespace Task1
 				Console.WriteLine();
 			}
 
-			for (int i = 0; i < intArray.GetLength(indexLineToSum); i++)
+			for (int i = 0; i < intArray.GetLength(1); i++)
 			{
 				sumLine += intArray[indexLineToSum, i];
 			}
 
-			for (int i = 0; i < intArray.GetLength(indexColumnToMultyply); i++)
+			for (int i = 0; i < intArray.GetLength(0); i++)
 			{
 				multiplyColumn *= intArray[i, indexColumnToMultyply];
 			}
