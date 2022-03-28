@@ -19,10 +19,11 @@ namespace Task4
 			string userInput;
 			int[] intArray = new int[0];
 
-			while (!isExit)
+			while (isExit == false)
 			{
 				Console.Write("Введите число или команду:");
 				userInput = Console.ReadLine();
+				
 				if (userInput == "exit")
 				{
 					isExit = true;
