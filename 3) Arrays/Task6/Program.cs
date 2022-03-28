@@ -37,16 +37,9 @@ namespace Task6
                         minimumElementIndex = j;
                     }
                 }
-                if (intArray[minimumElementIndex] == intArray[i])
-				{
-                    continue;
-                }
-				else
-				{
-                    int temporary = intArray[i];
-                    intArray[i] = intArray[minimumElementIndex];
-                    intArray[minimumElementIndex] = temporary;
-                }
+                int temporary = intArray[i];
+                intArray[i] = intArray[minimumElementIndex];
+                intArray[minimumElementIndex] = temporary;
             }
 
             Console.WriteLine("\nОтсортированный массив");
