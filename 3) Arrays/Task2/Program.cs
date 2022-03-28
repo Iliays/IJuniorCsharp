@@ -39,18 +39,6 @@ namespace Task2
 				Console.WriteLine();
 			}
 
-			//for (int i = 0; i < array.GetLength(0); i++)
-			//{
-			//	for (int j = 0; j < array.GetLength(1); j++)
-			//	{
-			//		if (maximumArrayElement < array[i, j])
-			//		{
-			//			maximumArrayElement = array[i, j];
-			//			indexLineMaximumElement = i;
-			//			indexColumnMaximumElement = j;
-			//		}
-			//	}
-			//}
 			intArray[indexLineMaximumElement, indexColumnMaximumElement] = 0;
 
 			Console.WriteLine("\n\nМаксимальное число - " + maximumArrayElement);
