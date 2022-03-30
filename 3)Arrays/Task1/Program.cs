@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Task1
 {
@@ -21,7 +21,6 @@ namespace Task1
 			int indexLineToSum = 1;
 			int indexColumnToMultyply = 0;
 
-
 			for (int i = 0; i < intArray.GetLength(0); i++)
 			{
 				for (int j = 0; j < intArray.GetLength(1); j++)
@@ -32,19 +31,14 @@ namespace Task1
 				Console.WriteLine();
 			}
 
+			for (int i = 0; i < intArray.GetLength(1); i++)
+			{
+				sumLine += intArray[indexLineToSum, i];
+			}
+
 			for (int i = 0; i < intArray.GetLength(0); i++)
 			{
-				for (int j = 0; j < intArray.GetLength(1); j++)
-				{
-					if (i == indexLineToSum)
-					{
-						sumLine += intArray[i, j];
-					}
-					if (j == indexColumnToMultyply)
-					{
-						multiplyColumn *= intArray[i, j];
-					}
-				}
+				multiplyColumn *= intArray[i, indexColumnToMultyply];
 			}
 
 			Console.WriteLine($"Сумма чисел строки {indexLineToSum + 1} = {sumLine}");

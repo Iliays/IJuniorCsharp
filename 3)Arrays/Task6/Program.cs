@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Task6
 {
@@ -14,47 +14,40 @@ namespace Task6
 			 */
 
 			int[] intArray = new int[10];
-            Random random = new Random();
-            int minimumRandomNumber = 1;
-            int maximumRandomNumber = 10;
-            int minimumElementIndex;
+			Random random = new Random();
+			int minimumRandomNumber = 1;
+			int maximumRandomNumber = 10;
+			int minimumElementIndex;
 
-            Console.WriteLine("Неотсортированный массив");
+			Console.WriteLine("Неотсортированный массив");
 			for (int i = 0; i < intArray.Length; i++)
 			{
-                intArray[i] = random.Next(minimumRandomNumber, maximumRandomNumber);
-                Console.Write(intArray[i] + " ");
+				intArray[i] = random.Next(minimumRandomNumber, maximumRandomNumber);
+				Console.Write(intArray[i] + " ");
 			}
 
-            // Сортировка выбором
-            for (int i = 0; i < intArray.Length; i++)
-            {
-                minimumElementIndex = i;
-                for (int j = i; j < intArray.Length; j++)
-                {
-                    if (intArray[j] < intArray[minimumElementIndex])
-                    {
-                        minimumElementIndex = j;
-                    }
-                }
-                if (intArray[minimumElementIndex] == intArray[i])
+			// Сортировка выбором
+			for (int i = 0; i < intArray.Length; i++)
+			{
+				minimumElementIndex = i;
+				for (int j = i; j < intArray.Length; j++)
 				{
-                    continue;
-                }
-				else
-				{
-                    int temporary = intArray[i];
-                    intArray[i] = intArray[minimumElementIndex];
-                    intArray[minimumElementIndex] = temporary;
-                }
-            }
+					if (intArray[j] < intArray[minimumElementIndex])
+					{
+						minimumElementIndex = j;
+					}
+				}
+				int temporary = intArray[i];
+				intArray[i] = intArray[minimumElementIndex];
+				intArray[minimumElementIndex] = temporary;
+			}
 
-            Console.WriteLine("\nОтсортированный массив");
-            for (int i = 0; i < intArray.Length; i++)
-            {
-                Console.Write(intArray[i] + " ");
-            }
-            Console.WriteLine();
-        }
+			Console.WriteLine("\nОтсортированный массив");
+			for (int i = 0; i < intArray.Length; i++)
+			{
+				Console.Write(intArray[i] + " ");
+			}
+			Console.WriteLine();
+		}
 	}
 }
