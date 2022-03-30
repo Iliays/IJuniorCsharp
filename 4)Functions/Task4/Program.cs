@@ -35,8 +35,6 @@ namespace Task4
 
 			DrawMap(map, playerStartDirectionX, playerStartDirectionY);
 
-
-
 			while (isPlaying)
 			{
 				if (Console.KeyAvailable)
