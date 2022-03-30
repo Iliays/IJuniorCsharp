@@ -15,11 +15,9 @@ namespace Task5
 			Random random = new Random();
 			int minimumRandomNumber = 1;
 			int maximumRandomNumber = 5;
-			int temporaryCountRepeat = 0;
+			int temporaryCountRepeat = 1;
 			int moreRepeatCount = 0;
-			int numberRepeatNow;
 			int numberMoreRepeat = 0;
-			int temporaryNumberWas = 0; // для проверки что данное число уже было
 
 			for (int i = 0; i < intArray.Length; i++)
 			{
@@ -27,31 +25,21 @@ namespace Task5
 				Console.Write(intArray[i] + " ");
 			}
 
-			for (int i = 0; i < intArray.Length; i++)
+			for (int i = 1; i < intArray.Length; i++)
 			{
-				numberRepeatNow = intArray[i];
-				for (int j = i; j < intArray.Length; j++)
+				if (intArray[i] == intArray[i - 1])
 				{
-					if (temporaryNumberWas == numberRepeatNow)
-					{
-						break;
-					}
-					if (intArray[j] == numberRepeatNow)
-					{
-						temporaryCountRepeat++;
-					}
-					else
-					{
-						break;
-					}
+					temporaryCountRepeat++;
 				}
-				temporaryNumberWas = numberRepeatNow;
-				if (temporaryCountRepeat > moreRepeatCount)
+				else
 				{
+					temporaryCountRepeat = 1;
+				}
+				if (temporaryCountRepeat >= moreRepeatCount)
+				{
+					numberMoreRepeat = intArray[i];
 					moreRepeatCount = temporaryCountRepeat;
-					numberMoreRepeat = numberRepeatNow;
 				}
-				temporaryCountRepeat = 0;
 			}
 
 			Console.WriteLine($"\nБольше всего подряд повторяется {numberMoreRepeat}, количество повторений {moreRepeatCount}");
