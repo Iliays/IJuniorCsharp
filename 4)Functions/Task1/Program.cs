@@ -24,9 +24,11 @@ namespace Task1
 			string[] postArray = { "Певец", "Грузчик", "Уборщик" };
 			bool isExit = false;
 			string userInput;
-			string userInputSurname;
-			string userInputPost;
-			int indexToDelete;
+			string userInputSurname = "";
+			string userInputPost = "";
+			int indexToDelete = 0;
+			string needToEnterSurname = "фамилию";
+			string needToEnterPost = "должность";
 
 			while (isExit == false)
 			{
@@ -42,33 +44,18 @@ namespace Task1
 				switch (userInput)
 				{
 					case "1":
-						Console.Write("Введите фамалию: ");
-						userInputSurname = Console.ReadLine();
-						surnamesArray = AddSurname(userInputSurname, surnamesArray);
-
-						Console.Write("Введите должность: ");
-						userInputPost = Console.ReadLine();
-						postArray = AddPost(userInputPost, postArray);
+						surnamesArray = AddElementToArray(userInputSurname, surnamesArray, needToEnterSurname);
+						postArray = AddElementToArray(userInputPost, postArray, needToEnterPost);
 						break;
 					case "2":
 						WriteAllCases(surnamesArray, postArray);
-						Console.ReadKey();
 						break;
 					case "3":
-						WriteAllCases(surnamesArray, postArray);
-
-						Console.Write("Введите номер досье для удаления: ");
-						indexToDelete = Convert.ToInt32(Console.ReadLine());
-
-						surnamesArray = DeleteByIndexSurname(indexToDelete, surnamesArray);
-						postArray = DeleteByIndexPost(indexToDelete, postArray);
+						surnamesArray = DeleteByIndexToArray(indexToDelete, surnamesArray, needToEnterSurname);
+						postArray = DeleteByIndexToArray(indexToDelete, postArray, needToEnterPost);
 						break;
 					case "4":
-						Console.Write("Введите фамалию: ");
-						userInputSurname = Console.ReadLine();
-
 						SearchBySurname(userInputSurname, surnamesArray, postArray);
-						Console.ReadKey();
 						break;
 					case "5":
 						isExit = true;
@@ -79,32 +66,21 @@ namespace Task1
 			}
 		}
 
-		static string[] AddSurname(string userInputSurname, string[] surnamesArray)
+		static string[] AddElementToArray(string userInput, string[] array, string needToEnter)
 		{
-			string[] temporaryArray = new string[surnamesArray.Length + 1];
+			Console.Write($"Введите {needToEnter}: ");
+			userInput = Console.ReadLine();
 
-			for (int i = 0; i < surnamesArray.Length; i++)
+			string[] temporaryArray = new string[array.Length + 1];
+
+			for (int i = 0; i < array.Length; i++)
 			{
-				temporaryArray[i] = surnamesArray[i];
+				temporaryArray[i] = array[i];
 			}
 
-			temporaryArray[temporaryArray.Length - 1] = userInputSurname;
-			surnamesArray = temporaryArray;
-			return surnamesArray;
-		}
-
-		static string[] AddPost(string userInputPost, string[] postArray)
-		{
-			string[] temporaryArray = new string[postArray.Length + 1];
-
-			for (int i = 0; i < postArray.Length; i++)
-			{
-				temporaryArray[i] = postArray[i];
-			}
-
-			temporaryArray[temporaryArray.Length - 1] = userInputPost;
-			postArray = temporaryArray;
-			return postArray;
+			temporaryArray[temporaryArray.Length - 1] = userInput;
+			array = temporaryArray;
+			return array;
 		}
 
 		static void WriteAllCases(string[] surnamesArray, string[] postArray)
@@ -116,10 +92,15 @@ namespace Task1
 				normalizeIndex++;
 				Console.WriteLine($"{normalizeIndex}) {surnamesArray[i]} - {postArray[i]}");
 			}
+
+			Console.ReadKey();
 		}
 
 		static void SearchBySurname(string surname, string[] surnamesArray, string[] postArray)
 		{
+			Console.Write("Введите фамалию: ");
+			surname = Console.ReadLine();
+
 			bool isFind = false;
 
 			for (int i = 0; i < surnamesArray.Length; i++)
@@ -127,7 +108,7 @@ namespace Task1
 				if (surname.ToLower() == surnamesArray[i].ToLower())
 				{
 					isFind = true;
-					Console.WriteLine($"Найден  человек: {surnamesArray[i]} {postArray[i]}");
+					Console.WriteLine($"Найден  человек: {surnamesArray[i]} - {postArray[i]}");
 				}
 			}
 
@@ -135,48 +116,41 @@ namespace Task1
 			{
 				Console.WriteLine("Не найдено!");
 			}
+
+			Console.ReadKey();
 		}
 
-		static string[] DeleteByIndexSurname(int index, string[] surnamesArray)
+		static string[] DeleteByIndexToArray(int index, string[] array, string needToEnter)
 		{
-			string[] temporaryArray = new string[surnamesArray.Length - 1];
-			int indexNormolize = index - 1;
+			Console.Write($"Введите номер досье для удаления {needToEnter}: ");
+			index = Convert.ToInt32(Console.ReadLine());
 
-			for (int i = 0; i < surnamesArray.Length; i++)
+			if (index > array.Length)
 			{
-				if (i < indexNormolize)
+				Console.WriteLine("Такого досье не существует");
+				Console.ReadKey();
+			}
+			else
+			{
+				string[] temporaryArray = new string[array.Length - 1];
+				int indexNormolize = index - 1;
+
+				for (int i = 0; i < array.Length; i++)
 				{
-					temporaryArray[i] = surnamesArray[i];
+					if (i < indexNormolize)
+					{
+						temporaryArray[i] = array[i];
+					}
+					else if (i > indexNormolize)
+					{
+						temporaryArray[i - 1] = array[i];
+					}
 				}
-				else if (i > indexNormolize)
-				{
-					temporaryArray[i - 1] = surnamesArray[i];
-				}
+
+				array = temporaryArray;
 			}
 
-			surnamesArray = temporaryArray;
-			return surnamesArray;
-		}
-
-		static string[] DeleteByIndexPost(int index, string[] postArray)
-		{
-			string[] temporaryArray = new string[postArray.Length - 1];
-			int indexNormolize = index - 1;
-
-			for (int i = 0; i < postArray.Length; i++)
-			{
-				if (i < index)
-				{
-					temporaryArray[i] = postArray[i];
-				}
-				else if (i > index)
-				{
-					temporaryArray[i - 1] = postArray[i];
-				}
-			}
-
-			postArray = temporaryArray;
-			return postArray;
+			return array;
 		}
 	}
 }
