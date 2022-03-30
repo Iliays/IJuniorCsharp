@@ -16,8 +16,8 @@ namespace Task4
 
 			Console.CursorVisible = false;
 
-			char[,] map = 
-			{ 
+			char[,] map =
+			{
 				{ '*', '*','*','*','*','*','*','*','*','*','*'},
 				{ '*', ' ','*',' ',' ',' ',' ',' ',' ',' ','*'},
 				{ '*', ' ','*',' ','*','*','*',' ','*','*','*'},
@@ -27,15 +27,15 @@ namespace Task4
 				{ '*', ' ','*',' ',' ',' ',' ',' ',' ',' ','*'},
 				{ '*', '*','*','*','*','*','*','*','*','*','*'}
 			};
-			int playerX = 1;
-			int playerY = 1;
+			int playerStartDirectionX = 1;
+			int playerStartDirectionY = 1;
 			int playerDirectionX = 0;
 			int playerDirectionY = 0;
 			bool isPlaying = true;
 
-			DrawMap(map);
+			DrawMap(map, playerStartDirectionX, playerStartDirectionY);
 
-			Move(ref playerX, ref playerY, playerDirectionX, playerDirectionY);
+
 
 			while (isPlaying)
 			{
@@ -45,15 +45,15 @@ namespace Task4
 
 					MoveDirection(key, ref playerDirectionX, ref playerDirectionY);
 
-					if (map[playerX + playerDirectionX, playerY + playerDirectionY] != '*')
+					if (map[playerStartDirectionX + playerDirectionX, playerStartDirectionY + playerDirectionY] != '*')
 					{
-						Move(ref playerX, ref playerY, playerDirectionX, playerDirectionY);
+						Move(ref playerStartDirectionX, ref playerStartDirectionY, playerDirectionX, playerDirectionY);
 					}
 				}
 			}
 		}
 
-		static void DrawMap(char[,] map)
+		static void DrawMap(char[,] map, int playerStartDirectionX, int playerStartDirectionY)
 		{
 			for (int i = 0; i < map.GetLength(0); i++)
 			{
@@ -63,6 +63,9 @@ namespace Task4
 				}
 				Console.WriteLine();
 			}
+
+			Console.SetCursorPosition(playerStartDirectionX, playerStartDirectionY);
+			Console.Write('$');
 		}
 
 		static void Move(ref int playerX, ref int playerY, int playerDirectionX, int playerDirectionY)
