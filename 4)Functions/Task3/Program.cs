@@ -16,26 +16,22 @@ namespace Task3
 			 * P.S Также в TryParse используется модфикатор параметра out
 			 */
 
-			TryParseToInt();
+			int number = TryParseToInt();
+
+			Console.WriteLine("Число: " + number);
 		}
 
-		static void TryParseToInt()
+		static int TryParseToInt()
 		{
-			string userInput;
-			bool isWorking = true;
+			int number;
+			string inputUser = Console.ReadLine();
 
-			while (isWorking == true)
+			while (int.TryParse(inputUser, out number) == false)
 			{
-				Console.Write("Введите: ");
-				userInput = Console.ReadLine();
-				bool isNumber = int.TryParse(userInput, out int number);
-
-				if (isNumber == true)
-				{
-					isWorking = false;
-					Console.WriteLine("Число: " + userInput);
-				}
+				inputUser = Console.ReadLine();
 			}
+
+			return number;
 		}
 	}
 }
