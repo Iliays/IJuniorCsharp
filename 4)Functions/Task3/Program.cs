@@ -24,12 +24,13 @@ namespace Task3
 		static int TryParseToInt()
 		{
 			int number;
-			string inputUser = "";
+			string inputUser;
 
-			while (int.TryParse(inputUser, out number) == false)
+			do
 			{
 				inputUser = Console.ReadLine();
 			}
+			while (int.TryParse(inputUser, out number) == false);
 
 			return number;
 		}
