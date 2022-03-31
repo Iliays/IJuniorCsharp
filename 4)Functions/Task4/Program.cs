@@ -41,7 +41,7 @@ namespace Task4
 				{
 					ConsoleKeyInfo key = Console.ReadKey(true);
 
-					MoveDirection(key, ref playerDirectionX, ref playerDirectionY);
+					ChangeDirection(key, ref playerDirectionX, ref playerDirectionY);
 
 					if (map[playerStartDirectionX + playerDirectionX, playerStartDirectionY + playerDirectionY] != '*')
 					{
@@ -78,7 +78,7 @@ namespace Task4
 			Console.Write('$');
 		}
 
-		static void MoveDirection(ConsoleKeyInfo key, ref int playerDirectionX, ref int playerDirectionY)
+		static void ChangeDirection(ConsoleKeyInfo key, ref int playerDirectionX, ref int playerDirectionY)
 		{
 			switch (key.Key)
 			{
