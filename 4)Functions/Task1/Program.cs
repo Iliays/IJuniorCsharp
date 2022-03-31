@@ -23,12 +23,6 @@ namespace Task1
 			string[] surnamesArray = { "Меркури", "Боков", "Кощанов" };
 			string[] postArray = { "Певец", "Грузчик", "Уборщик" };
 			bool isExit = false;
-			string userInput;
-			string userInputSurname = "";
-			string userInputPost = "";
-			int indexToDelete = 0;
-			string needToEnterSurname = "фамилию";
-			string needToEnterPost = "должность";
 
 			while (isExit == false)
 			{
@@ -37,25 +31,23 @@ namespace Task1
 					"3) удалить досье\n" +
 					"4) поиск по фамилии\n" +
 					"5) выход");
-				userInput = Console.ReadLine();
+				string userInput = Console.ReadLine();
 
 				Console.Clear();
 
 				switch (userInput)
 				{
 					case "1":
-						surnamesArray = AddElementToArray(userInputSurname, surnamesArray, needToEnterSurname);
-						postArray = AddElementToArray(userInputPost, postArray, needToEnterPost);
+						AddElementToArray(ref surnamesArray, ref postArray);
 						break;
 					case "2":
 						WriteAllCases(surnamesArray, postArray);
 						break;
 					case "3":
-						surnamesArray = DeleteByIndexToArray(indexToDelete, surnamesArray, needToEnterSurname);
-						postArray = DeleteByIndexToArray(indexToDelete, postArray, needToEnterPost);
+						DeleteByIndexToArray(ref surnamesArray, ref postArray);
 						break;
 					case "4":
-						SearchBySurname(userInputSurname, surnamesArray, postArray);
+						SearchBySurname(surnamesArray, postArray);
 						break;
 					case "5":
 						isExit = true;
@@ -66,21 +58,26 @@ namespace Task1
 			}
 		}
 
-		static string[] AddElementToArray(string userInput, string[] array, string needToEnter)
+		static void AddElementToArray(ref string[] arraySurname, ref string[] arrayPost)
 		{
-			Console.Write($"Введите {needToEnter}: ");
-			userInput = Console.ReadLine();
+			Console.Write("Введите фамилию: ");
+			string userInputSurname = Console.ReadLine();
+			Console.Write("Введите должность: ");
+			string userInputPost = Console.ReadLine();
 
-			string[] temporaryArray = new string[array.Length + 1];
+			string[] temporaryArraySurname = new string[arraySurname.Length + 1];
+			string[] temporaryArrayPost = new string[arraySurname.Length + 1];
 
-			for (int i = 0; i < array.Length; i++)
+			for (int i = 0; i < arraySurname.Length; i++)
 			{
-				temporaryArray[i] = array[i];
+				temporaryArraySurname[i] = arraySurname[i];
+				temporaryArrayPost[i] = arrayPost[i];
 			}
 
-			temporaryArray[temporaryArray.Length - 1] = userInput;
-			array = temporaryArray;
-			return array;
+			temporaryArraySurname[temporaryArraySurname.Length - 1] = userInputSurname;
+			arraySurname = temporaryArraySurname;
+			temporaryArrayPost[temporaryArrayPost.Length - 1] = userInputPost;
+			arrayPost = temporaryArrayPost;
 		}
 
 		static void WriteAllCases(string[] surnamesArray, string[] postArray)
@@ -96,10 +93,10 @@ namespace Task1
 			Console.ReadKey();
 		}
 
-		static void SearchBySurname(string surname, string[] surnamesArray, string[] postArray)
+		static void SearchBySurname(string[] surnamesArray, string[] postArray)
 		{
 			Console.Write("Введите фамалию: ");
-			surname = Console.ReadLine();
+			string surname = Console.ReadLine();
 
 			bool isFind = false;
 
@@ -108,7 +105,7 @@ namespace Task1
 				if (surname.ToLower() == surnamesArray[i].ToLower())
 				{
 					isFind = true;
-					Console.WriteLine($"Найден  человек: {surnamesArray[i]} - {postArray[i]}");
+					Console.WriteLine($"Найден человек: {surnamesArray[i]} - {postArray[i]}");
 				}
 			}
 
@@ -120,37 +117,39 @@ namespace Task1
 			Console.ReadKey();
 		}
 
-		static string[] DeleteByIndexToArray(int index, string[] array, string needToEnter)
+		static void DeleteByIndexToArray(ref string[] arraySurname, ref string[] arrayPost)
 		{
-			Console.Write($"Введите номер досье для удаления {needToEnter}: ");
-			index = Convert.ToInt32(Console.ReadLine());
+			Console.Write($"Введите номер досье для удаления: ");
+			int index = Convert.ToInt32(Console.ReadLine());
 
-			if (index > array.Length)
+			if (index > arraySurname.Length && index > arrayPost.Length)
 			{
 				Console.WriteLine("Такого досье не существует");
 				Console.ReadKey();
 			}
 			else
 			{
-				string[] temporaryArray = new string[array.Length - 1];
+				string[] temporaryArraySurname = new string[arraySurname.Length - 1];
+				string[] temporaryArrayPost = new string[arraySurname.Length - 1];
 				int indexNormolize = index - 1;
 
-				for (int i = 0; i < array.Length; i++)
+				for (int i = 0; i < arraySurname.Length; i++)
 				{
 					if (i < indexNormolize)
 					{
-						temporaryArray[i] = array[i];
+						temporaryArraySurname[i] = arraySurname[i];
+						temporaryArrayPost[i] = arrayPost[i];
 					}
 					else if (i > indexNormolize)
 					{
-						temporaryArray[i - 1] = array[i];
+						temporaryArraySurname[i - 1] = arraySurname[i];
+						temporaryArrayPost[i - 1] = arrayPost[i];
 					}
 				}
 
-				array = temporaryArray;
+				arraySurname = temporaryArraySurname;
+				arrayPost = temporaryArrayPost;
 			}
-
-			return array;
 		}
 	}
 }
