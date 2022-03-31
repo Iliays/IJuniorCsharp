@@ -24,7 +24,7 @@ namespace Task3
 		static int TryParseToInt()
 		{
 			int number;
-			string inputUser = Console.ReadLine();
+			string inputUser = "";
 
 			while (int.TryParse(inputUser, out number) == false)
 			{
