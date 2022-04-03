@@ -38,17 +38,13 @@ namespace Task1
 				switch (userInput)
 				{
 					case "1":
-						AddElementToArray(ref fullNameArray, "ФИО");
-						AddElementToArray(ref postArray, "должность");
+						AddElementToArray(ref fullNameArray, ref postArray);
 						break;
 					case "2":
 						WriteAllCases(fullNameArray, postArray);
 						break;
 					case "3":
-						Console.Write($"Введите номер досье для удаления: ");
-						int index = Convert.ToInt32(Console.ReadLine());
-						DeleteByIndexToArray(ref fullNameArray, index);
-						DeleteByIndexToArray(ref postArray, index);
+						DeleteByIndexToArray(ref fullNameArray, ref postArray);
 						break;
 					case "4":
 						SearchByFullName(fullNameArray, postArray);
@@ -60,6 +56,12 @@ namespace Task1
 
 				Console.Clear();
 			}
+		}
+
+		static void AddElementToArray(ref string[] fullNameArray, ref string[] postArray)
+		{
+			AddElementToArray(ref fullNameArray, "ФИО");
+			AddElementToArray(ref postArray, "должность");
 		}
 
 		static void AddElementToArray(ref string[] array, string needToInput)
@@ -91,19 +93,20 @@ namespace Task1
 			Console.ReadKey();
 		}
 
-		static void SearchByFullName(string[] surnamesArray, string[] postArray)
+		static void SearchByFullName(string[] fullNameArray, string[] postArray)
 		{
-			Console.Write("Введите ФИО: ");
+			Console.Write("Введите фамилию: ");
 			string surname = Console.ReadLine();
 
 			bool isFind = false;
 
-			for (int i = 0; i < surnamesArray.Length; i++)
+			for (int i = 0; i < fullNameArray.Length; i++)
 			{
-				if (surname.ToLower() == surnamesArray[i].ToLower())
+				string[] surnameArray = fullNameArray[i].Split(' ');
+				if (surname.ToLower() == surnameArray[0].ToLower())
 				{
 					isFind = true;
-					Console.WriteLine($"Найден человек: {surnamesArray[i]} - {postArray[i]}");
+					Console.WriteLine($"Найден человек: {fullNameArray[i]} - {postArray[i]}");
 				}
 			}
 
@@ -113,6 +116,14 @@ namespace Task1
 			}
 
 			Console.ReadKey();
+		}
+
+		static void DeleteByIndexToArray(ref string[] fullNameArray, ref string[] postArray)
+		{
+			Console.Write($"Введите номер досье для удаления: ");
+			int index = Convert.ToInt32(Console.ReadLine());
+			DeleteByIndexToArray(ref fullNameArray, index);
+			DeleteByIndexToArray(ref postArray, index);
 		}
 
 		static void DeleteByIndexToArray(ref string[] array, int index)
