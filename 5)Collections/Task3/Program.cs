@@ -32,18 +32,25 @@ namespace Task3
 				}
 				else if (userInput == "sum")
 				{
-					int sumOfArray = 0;
-					for (int i = 0; i < intList.Count; i++)
-					{
-						sumOfArray += intList[i];
-					}
-					Console.WriteLine("Сумма чисел в массиве = " + sumOfArray);
+					Sum(intList);
 				}
 				else if (int.TryParse(userInput, out int number) == true)
 				{
 					intList.Add(number);
 				}
 			}
+		}
+
+		static void Sum(List<int> list)
+		{
+			int sumOfArray = 0;
+
+			for (int i = 0; i < list.Count; i++)
+			{
+				sumOfArray += list[i];
+			}
+
+			Console.WriteLine("Сумма чисел в массиве = " + sumOfArray);
 		}
 	}
 }

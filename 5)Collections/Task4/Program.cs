@@ -38,13 +38,13 @@ namespace Task4
 				switch (userInput)
 				{
 					case "1":
-						AddElementToDictionary(ref dictionaryFullNameAndPost);
+						AddElement(ref dictionaryFullNameAndPost);
 						break;
 					case "2":
 						WriteAllCases(dictionaryFullNameAndPost);
 						break;
 					case "3":
-						RemoveElementToDictionary(ref dictionaryFullNameAndPost);
+						RemoveElement(ref dictionaryFullNameAndPost);
 						break;
 					case "4":
 						isExit = true;
@@ -55,13 +55,22 @@ namespace Task4
 			}
 		}
 
-		static void AddElementToDictionary(ref Dictionary<string, string> dictionary)
+		static void AddElement(ref Dictionary<string, string> dictionary)
 		{
 			Console.Write("Введите ФИО: ");
 			string inputFullName = Console.ReadLine();
-			Console.Write("Введите должность: ");
-			string inputPost = Console.ReadLine();
-			dictionary.Add(inputFullName, inputPost);
+
+			if (dictionary.ContainsKey(inputFullName))
+			{
+				Console.WriteLine("Данный ключ уже существует");
+				Console.ReadKey();
+			}
+			else
+			{
+				Console.Write("Введите должность: ");
+				string inputPost = Console.ReadLine();
+				dictionary.Add(inputFullName, inputPost);
+			}
 		}
 
 		static void WriteAllCases(Dictionary<string, string> dictionary)
@@ -74,7 +83,7 @@ namespace Task4
 			Console.ReadKey();
 		}
 
-		static void RemoveElementToDictionary(ref Dictionary<string, string> dictionary)
+		static void RemoveElement(ref Dictionary<string, string> dictionary)
 		{
 			Console.Write("Введите ФИО: ");
 			string inputFullName = Console.ReadLine();
