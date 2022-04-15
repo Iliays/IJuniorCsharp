@@ -22,6 +22,8 @@ namespace Task7
 			{
 				Console.WriteLine(soldier);
 			}
+
+			firstSquad = firstSquad.Where(soldier => soldier.ToUpper().StartsWith("Б") == false).ToList();
 		}
 	}
 }
