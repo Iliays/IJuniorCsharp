@@ -18,7 +18,7 @@ namespace Task3
 	{
 		static void Main(string[] args)
 		{
-			List<Patient> patients = new List<Patient> { new Patient("Кошкаров Александр", 25, "Камни в почках"), 
+			List<Patient> patients = new List<Patient> { new Patient("Кошкаров Александр", 25, "Камни в почках"),
 				new Patient("Козлов Виктор", 20, "Гастрит"),
 				new Patient("Архипов Константин", 30, "Гастрит"),
 				new Patient("Иванов Иван", 40, "Гепатоз"),
@@ -70,24 +70,18 @@ namespace Task3
 
 		static void SortByFullName(List<Patient> patients)
 		{
-			var sortingPatientsByFullName = patients.OrderBy(patient => patient.FullName);
+			var sortingPatientsByFullName = patients.OrderBy(patient => patient.FullName).ToList();
 
-			foreach (var patient in sortingPatientsByFullName)
-			{
-				Console.WriteLine($"ФИО: {patient.FullName}");
-			}
+			ShowList(sortingPatientsByFullName);
 
 			Console.ReadKey();
 		}
 
 		static void SortByAge(List<Patient> patients)
 		{
-			var sortingPatientsByAge = patients.OrderBy(patient => patient.Age);
+			var sortingPatientsByAge = patients.OrderBy(patient => patient.Age).ToList();
 
-			foreach (var patient in sortingPatientsByAge)
-			{
-				Console.WriteLine($"ФИО: {patient.FullName}, возраст - {patient.Age}");
-			}
+			ShowList(sortingPatientsByAge);
 
 			Console.ReadKey();
 		}
@@ -96,7 +90,7 @@ namespace Task3
 		{
 			Console.Write("введите название болезни: ");
 			string inputDisease = Console.ReadLine();
-			var patientsWithDisease = patients.Where(patient => patient.Disease.ToLower() == inputDisease.ToLower());
+			var patientsWithDisease = patients.Where(patient => patient.Disease.ToLower() == inputDisease.ToLower()).ToList();
 
 			if (patientsWithDisease.Count() == 0)
 			{
@@ -104,10 +98,7 @@ namespace Task3
 			}
 			else
 			{
-				foreach (var patient in patientsWithDisease)
-				{
-					Console.WriteLine($"ФИО: {patient.FullName}, болезнь - {patient.Disease}");
-				}
+				ShowList(patientsWithDisease);
 			}
 
 			Console.ReadKey();
