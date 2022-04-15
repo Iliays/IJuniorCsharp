@@ -14,27 +14,27 @@ namespace Task02
 		{
 			Player player1 = new Player(5, 10);
 			Renderer renderer = new Renderer();
-			renderer.DrawPlayer(player1.XPlayerPosition, player1.YPlayerPosition);
+			renderer.DrawPlayer(player1.XPosition, player1.YPosition);
 		}
 	}
 
 	class Player
 	{
-		public int XPlayerPosition { get; private set; }
-		public int YPlayerPosition { get; private set; }
+		public int XPosition { get; private set; }
+		public int YPosition { get; private set; }
 
-		public Player(int x, int y)
+		public Player(int xPosition, int yPosition)
 		{
-			XPlayerPosition = x;
-			YPlayerPosition = y;
+			XPosition = xPosition;
+			YPosition = yPosition;
 		}
 	}
 
 	class Renderer
 	{
-		public void DrawPlayer(int x, int y, char symbol = '$')
+		public void DrawPlayer(int xPosition, int yPosition, char symbol = '$')
 		{
-			Console.SetCursorPosition(x, y);
+			Console.SetCursorPosition(xPosition, yPosition);
 			Console.Write(symbol);
 		}
 	}
