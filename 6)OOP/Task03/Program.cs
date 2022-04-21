@@ -35,7 +35,7 @@ namespace Task03
 			_players.Add(new Player("Bitter", 100, true));
 		}
 
-		private int TryParseToInt(string message)
+		private int GetNumber(string message)
 		{
 			int number;
 			string inputUser;
@@ -54,14 +54,14 @@ namespace Task03
 		{
 			Console.Write("Введите ник: ");
 			string userInputNickname = Console.ReadLine();
-			int userInputLevel = TryParseToInt("Введите уровень: ");
+			int userInputLevel = GetNumber("Введите уровень: ");
 
 			_players.Add(new Player(userInputNickname, userInputLevel));
 		}
 
 		private void DeletePlayer()
 		{
-			_idPlayer = TryParseToInt("Введите id: ");
+			_idPlayer = GetNumber("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
@@ -72,7 +72,7 @@ namespace Task03
 
 		private void PlayerBan()
 		{
-			_idPlayer = TryParseToInt("Введите id: ");
+			_idPlayer = GetNumber("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
@@ -83,7 +83,7 @@ namespace Task03
 
 		private void PlayerUnban()
 		{
-			_idPlayer = TryParseToInt("Введите id: ");
+			_idPlayer = GetNumber("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
