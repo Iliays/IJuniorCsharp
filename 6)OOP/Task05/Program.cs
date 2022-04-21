@@ -27,9 +27,9 @@ class Library
 	private string _inputAuthorOfBook;
 	private int _inputYearOfRelease;
 
-	private void StartDataForTest()
+	private void FillingData()
 	{
-		_books.Add(new Book("Евегений Онегин", "Пушкин" , 1833));
+		_books.Add(new Book("Евегений Онегин", "Пушкин", 1833));
 		_books.Add(new Book("Мертвые души", "Гоголь", 1842));
 		_books.Add(new Book("Над пропастью во ржи", "Сэлинджер", 1951));
 		_books.Add(new Book("Мартинн Иден", "Лондон", 1909));
@@ -119,7 +119,7 @@ class Library
 
 	public void Work()
 	{
-		StartDataForTest();
+		FillingData();
 
 		bool isWorking = true;
 
