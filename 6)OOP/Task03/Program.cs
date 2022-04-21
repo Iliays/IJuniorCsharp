@@ -25,11 +25,9 @@ namespace Task03
 	class DataBase
 	{
 		private List<Player> _players = new List<Player>();
-		private string _userInputNickname;
-		private int _userInputLevel;
 		private int _idPlayer;
 
-		private void StartDataForTest()
+		private void FillingData()
 		{
 			_players.Add(new Player("Killer", 10));
 			_players.Add(new Player("Destroyer", 15));
@@ -37,20 +35,33 @@ namespace Task03
 			_players.Add(new Player("Bitter", 100, true));
 		}
 
+		private int TryParseToInt(string message)
+		{
+			int number;
+			string inputUser;
+
+			do
+			{
+				Console.Write(message);
+				inputUser = Console.ReadLine();
+			}
+			while (int.TryParse(inputUser, out number) == false);
+
+			return number;
+		}
+
 		private void CreateNewPlayer()
 		{
 			Console.Write("Введите ник: ");
-			_userInputNickname = Console.ReadLine();
-			Console.Write("Введите уровень: ");
-			_userInputLevel = Convert.ToInt32(Console.ReadLine());
+			string userInputNickname = Console.ReadLine();
+			int userInputLevel = TryParseToInt("Введите уровень: ");
 
-			_players.Add(new Player(_userInputNickname, _userInputLevel));
+			_players.Add(new Player(userInputNickname, userInputLevel));
 		}
 
 		private void DeletePlayer()
 		{
-			Console.Write("Введите id: ");
-			_idPlayer = Convert.ToInt32(Console.ReadLine());
+			_idPlayer = TryParseToInt("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
@@ -61,25 +72,23 @@ namespace Task03
 
 		private void PlayerBan()
 		{
-			Console.Write("Введите id: ");
-			_idPlayer = Convert.ToInt32(Console.ReadLine());
+			_idPlayer = TryParseToInt("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
 				if (_players[i].PlayerId == _idPlayer && _players[i].IsBaned == false)
-					_players[i].ChangeIsBaned();
+					_players[i].Ban();
 			}
 		}
 
 		private void PlayerUnban()
 		{
-			Console.Write("Введите id: ");
-			_idPlayer = Convert.ToInt32(Console.ReadLine());
+			_idPlayer = TryParseToInt("Введите id: ");
 
 			for (int i = 0; i < _players.Count; i++)
 			{
 				if (_players[i].PlayerId == _idPlayer && _players[i].IsBaned == true)
-					_players[i].ChangeIsBaned();
+					_players[i].Unban();
 			}
 		}
 
@@ -93,7 +102,7 @@ namespace Task03
 
 		public void Work()
 		{
-			StartDataForTest();
+			FillingData();
 
 			bool isWorking = true;
 
@@ -152,17 +161,26 @@ namespace Task03
 		public void ShowInfo()
 		{
 			if (IsBaned)
+			{
+				Console.ForegroundColor = ConsoleColor.Red;
 				Console.WriteLine($"{PlayerId} - {PlayerNickname}({PlayerLevel} уровень) игрок забанен");
+			}
 			else
+			{
+				Console.ForegroundColor = ConsoleColor.Green;
 				Console.WriteLine($"{PlayerId} - {PlayerNickname}({PlayerLevel} уровень) игрок не забанен");
+			}
+			Console.ForegroundColor = ConsoleColor.Gray;
 		}
 
-		public void ChangeIsBaned()
+		public void Ban()
 		{
-			if (IsBaned == false)
-				IsBaned = true;
-			else
-				IsBaned = false;
+			IsBaned = true;
+		}
+
+		public void Unban()
+		{
+			IsBaned = false;
 		}
 	}
 }
