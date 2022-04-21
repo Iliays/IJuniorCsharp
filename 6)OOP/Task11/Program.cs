@@ -29,7 +29,7 @@ namespace Task11
 		private string _inputName;
 		private int _inputLifeTime;
 
-		private void StartDataForTest()
+		private void FillingData()
 		{
 			_fishes.Add(new Fish("Gubby", 5));
 			_fishes.Add(new Fish("Kit", 10));
@@ -70,7 +70,13 @@ namespace Task11
 			for (int i = 0; i < _fishes.Count; i++)
 			{
 				_fishes[i].DecreaseLife();
+			}
+		}
 
+		private void RemoveDeadFish()
+		{
+			for (int i = 0; i < _fishes.Count; i++)
+			{
 				if (_fishes[i].LifeTime == 0)
 					_fishes.RemoveAt(i);
 			}
@@ -78,7 +84,7 @@ namespace Task11
 
 		public void Work()
 		{
-			StartDataForTest();
+			FillingData();
 
 			int currentFishesInAqurium = _fishes.Count;
 
@@ -101,6 +107,7 @@ namespace Task11
 				}
 
 				DecreaseFishLife();
+				RemoveDeadFish();
 				Console.Clear();
 			}
 		}
