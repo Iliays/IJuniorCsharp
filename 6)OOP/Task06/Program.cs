@@ -14,46 +14,26 @@ namespace Task06
 	{
 		static void Main(string[] args)
 		{
-			Seller seller = new Seller();
-			seller.Work();
+			Store store = new Store();
+			store.Work();
 		}
 	}
 
-	class Seller
+	class Store
 	{
-		private List<Product> _productList = new List<Product>();
+		private Seller _seller = new Seller(100);
 		private Player _player = new Player(100);
 		private int _inputIndex;
-		private int _money = 100;
 
-		private void AddProducts()
-		{
-			_productList.Add(new Product("Potion HP", 10));
-			_productList.Add(new Product("Potion MP", 10));
-			_productList.Add(new Product("Sword", 120));
-			_productList.Add(new Product("Shield", 100));
-		}
-
-		private void ShowProducts()
-		{
-			for (int i = 0; i < _productList.Count; i++)
-			{
-				_productList[i].ShowProductInfo();
-			}
-
-			Console.ReadKey();
-		}
-
-		private void SaleProduct()
+		public void SaleProduct()
 		{
 			Console.WriteLine("Введите номер товара для покупки:");
-			_inputIndex = Convert.ToInt32(Console.ReadLine());
+			_inputIndex = Convert.ToInt32(Console.ReadLine()) - 1;
 
-			if(_player.Check(_productList[_inputIndex - 1]))
+			if (_player.Check(_seller.ProductList[_inputIndex]))
 			{
-				_money += _productList[_inputIndex - 1].ProductPrice;
-				_player.Purchase(_productList[_inputIndex - 1]);
-				_productList.RemoveAt(_inputIndex - 1);
+				_player.Purchase(_seller.ProductList[_inputIndex]);
+				_seller.Sale(_seller.ProductList[_inputIndex]);
 			}
 			else
 			{
@@ -65,12 +45,12 @@ namespace Task06
 
 		public void Work()
 		{
-			AddProducts();
+			_seller.AddProducts();
 			bool isWorking = true;
 
 			while (isWorking)
 			{
-				Console.WriteLine("Деньги торговца: " + _money);
+
 				Console.WriteLine("1) показать все товары\n" +
 					"2) купить товар\n" +
 					"3) посмотреть инвентарь игрока\n" +
@@ -80,7 +60,7 @@ namespace Task06
 				switch (userInput)
 				{
 					case "1":
-						ShowProducts();
+						_seller.ShowProducts();
 						break;
 					case "2":
 						SaleProduct();
@@ -98,10 +78,47 @@ namespace Task06
 		}
 	}
 
+	class Seller
+	{
+		public List<Product> ProductList { get; private set; } = new List<Product>();
+		private int _money;
+
+		public Seller(int money)
+		{
+			_money = money;
+		}
+
+		public void AddProducts()
+		{
+			ProductList.Add(new Product("Potion HP", 10));
+			ProductList.Add(new Product("Potion MP", 10));
+			ProductList.Add(new Product("Sword", 120));
+			ProductList.Add(new Product("Shield", 100));
+		}
+
+		public void Sale(Product product)
+		{
+			_money += product.ProductPrice;
+			ProductList.Remove(product);
+		}
+
+		public void ShowProducts()
+		{
+			for (int i = 0; i < ProductList.Count; i++)
+			{
+				ProductList[i].ShowProductInfo();
+			}
+
+			Console.WriteLine("\nДеньги торговца: " + _money);
+
+			Console.ReadKey();
+		}
+	}
+
 	class Player
 	{
-		private int _money;
 		private List<Product> _inventory = new List<Product>();
+		private int _money;
 
 		public Player(int money)
 		{
