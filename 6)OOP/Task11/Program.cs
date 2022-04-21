@@ -39,14 +39,28 @@ namespace Task11
 			_fishes.Add(new Fish("Seled", 5));
 		}
 
+		private int GetNumber(string message)
+		{
+			int number;
+			string inputUser;
+
+			do
+			{
+				Console.Write(message);
+				inputUser = Console.ReadLine();
+			}
+			while (int.TryParse(inputUser, out number) == false);
+
+			return number;
+		}
+
 		private void AddFish()
 		{
 			if (_maxFishesInAquarium > _fishes.Count)
 			{
 				Console.WriteLine("Введите имя рыбы: ");
 				_inputName = Console.ReadLine();
-				Console.WriteLine("введите время жизни: ");
-				_inputLifeTime = Convert.ToInt32(Console.ReadLine());
+				_inputLifeTime = GetNumber("Введите время жизни: ");
 
 				_fishes.Add(new Fish(_inputName, _inputLifeTime));
 			}
