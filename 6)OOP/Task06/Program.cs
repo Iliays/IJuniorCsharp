@@ -23,17 +23,30 @@ namespace Task06
 	{
 		private Seller _seller = new Seller(100);
 		private Player _player = new Player(100);
-		private int _inputIndex;
+
+		private int GetNumber(string message)
+		{
+			int number;
+			string inputUser;
+
+			do
+			{
+				Console.Write(message);
+				inputUser = Console.ReadLine();
+			}
+			while (int.TryParse(inputUser, out number) == false);
+
+			return number;
+		}
 
 		public void SaleProduct()
 		{
-			Console.WriteLine("Введите номер товара для покупки:");
-			_inputIndex = Convert.ToInt32(Console.ReadLine()) - 1;
+			int _inputIndex = GetNumber("Введите номер товара для покупки:") - 1;
 
-			if (_player.Check(_seller.ProductList[_inputIndex]))
+			if (_player.CheckEnoughMoney(_seller.GetProductByIndex(_inputIndex)))
 			{
-				_player.Purchase(_seller.ProductList[_inputIndex]);
-				_seller.Sale(_seller.ProductList[_inputIndex]);
+				_player.Purchase(_seller.GetProductByIndex(_inputIndex));
+				_seller.Sale(_seller.GetProductByIndex(_inputIndex));
 			}
 			else
 			{
@@ -80,7 +93,7 @@ namespace Task06
 
 	class Seller
 	{
-		public List<Product> ProductList { get; private set; } = new List<Product>();
+		private List<Product> _productList = new List<Product>();
 		private int _money;
 
 		public Seller(int money)
@@ -90,23 +103,28 @@ namespace Task06
 
 		public void AddProducts()
 		{
-			ProductList.Add(new Product("Potion HP", 10));
-			ProductList.Add(new Product("Potion MP", 10));
-			ProductList.Add(new Product("Sword", 120));
-			ProductList.Add(new Product("Shield", 100));
+			_productList.Add(new Product("Potion HP", 10));
+			_productList.Add(new Product("Potion MP", 10));
+			_productList.Add(new Product("Sword", 120));
+			_productList.Add(new Product("Shield", 100));
+		}
+
+		public Product GetProductByIndex(int index)
+		{
+			return _productList[index];
 		}
 
 		public void Sale(Product product)
 		{
 			_money += product.ProductPrice;
-			ProductList.Remove(product);
+			_productList.Remove(product);
 		}
 
 		public void ShowProducts()
 		{
-			for (int i = 0; i < ProductList.Count; i++)
+			for (int i = 0; i < _productList.Count; i++)
 			{
-				ProductList[i].ShowProductInfo();
+				_productList[i].ShowProductInfo();
 			}
 
 			Console.WriteLine("\nДеньги торговца: " + _money);
@@ -125,7 +143,7 @@ namespace Task06
 			_money = money;
 		}
 
-		public bool Check(Product product)
+		public bool CheckEnoughMoney(Product product)
 		{
 			if (_money >= product.ProductPrice)
 				return true;
