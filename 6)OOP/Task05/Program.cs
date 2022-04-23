@@ -31,8 +31,24 @@ class Library
 	{
 		_books.Add(new Book("Евегений Онегин", "Пушкин", 1833));
 		_books.Add(new Book("Мертвые души", "Гоголь", 1842));
+		_books.Add(new Book("Мартин Иден", "Лондон", 1909));
 		_books.Add(new Book("Над пропастью во ржи", "Сэлинджер", 1951));
-		_books.Add(new Book("Мартинн Иден", "Лондон", 1909));
+		_books.Add(new Book("Мартин Иден", "Лондон", 1909));
+	}
+
+	private int GetNumber(string message)
+	{
+		int number;
+		string inputUser;
+
+		do
+		{
+			Console.Write(message);
+			inputUser = Console.ReadLine();
+		}
+		while (int.TryParse(inputUser, out number) == false);
+
+		return number;
 	}
 
 	private void AddNewBook()
@@ -41,8 +57,7 @@ class Library
 		_inputBookName = Console.ReadLine();
 		Console.WriteLine("Введите автора книги:");
 		_inputAuthorOfBook = Console.ReadLine();
-		Console.WriteLine("Введите год выпуска книги:");
-		_inputYearOfRelease = Convert.ToInt32(Console.ReadLine());
+		_inputYearOfRelease = GetNumber("Введите год выпуска книги:");
 
 		_books.Add(new Book(_inputBookName, _inputAuthorOfBook, _inputYearOfRelease));
 	}
@@ -54,8 +69,11 @@ class Library
 
 		for (int i = 0; i < _books.Count; i++)
 		{
-			if (_books[i].NameOfBook == _inputBookName)
+			if (_books[i].NameOfBook.ToLower() == _inputBookName.ToLower())
+			{
 				_books.RemoveAt(i);
+				i--;
+			}
 		}
 	}
 
@@ -103,8 +121,7 @@ class Library
 
 	private void SearchYearOfRealese()
 	{
-		Console.WriteLine("Введите год выпуска книги:");
-		_inputYearOfRelease = Convert.ToInt32(Console.ReadLine());
+		_inputYearOfRelease = GetNumber("Введите год выпуска книги:");
 
 		for (int i = 0; i < _books.Count; i++)
 		{
