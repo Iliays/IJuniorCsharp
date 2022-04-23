@@ -24,41 +24,30 @@ namespace Task12
 	{
 		private List<Aviary> _aviary = new List<Aviary>();
 
-		private void FillingData()
-		{
-			_aviary.Add(new Aviary(new Animal("Львы", "М", "Гррр"), 2));
-			_aviary.Add(new Aviary(new Animal("Коровы", "Ж", "Мууу"), 5));
-			_aviary.Add(new Aviary(new Animal("Медведь", "М", "Уааа"), 1));
-			_aviary.Add(new Aviary(new Animal("Панды", "М", "Ууу"), 3));
-		}
-
-		private bool IsNumber(string inputUser)
-		{
-			return int.TryParse(inputUser, out int number);
-		}
-
 		public void Work()
 		{
-			FillingData();
+			FillData();
 
 			bool isWorking = true;
 
 			while (isWorking)
 			{
 				Console.WriteLine("Для выхода из программы напишите <Выйти>");
+
 				for (int i = 0; i < _aviary.Count; i++)
 				{
-					Console.WriteLine($"{i + 1})Вольер - {_aviary[i].GetAnimalName()}");
+					Console.Write($"\n{i + 1})Вольер: ");
+					_aviary[i].GetAnimalName();
 				}
 
-				Console.Write("Выберите вольер: ");
+				Console.Write("\nВыберите вольер: ");
 				string userInput = Console.ReadLine();
 
 				if (userInput.ToLower() == "выйти")
 				{
 					isWorking = false;
 				}
-				else if(IsNumber(userInput))
+				else if (IsNumber(userInput))
 				{
 					_aviary[Convert.ToInt32(userInput) - 1].ShowInfo();
 					Console.ReadKey();
@@ -71,28 +60,45 @@ namespace Task12
 				Console.Clear();
 			}
 		}
+
+		private void FillData()
+		{
+			_aviary.Add(new Aviary(new List<Animal>() { new Animal("Лев", "М", "Гррр"), new Animal("Львица", "Ж", "Гррр") }));
+			_aviary.Add(new Aviary(new List<Animal>() { new Animal("Корова", "Ж", "Мууу"), new Animal("Корова", "Ж", "Мууу"), new Animal("Корова", "Ж", "Мууу") }));
+			_aviary.Add(new Aviary(new List<Animal>() { new Animal("Медведь", "М", "Уааа"), new Animal("Медведь", "М", "Уааа") }));
+			_aviary.Add(new Aviary(new List<Animal>() { new Animal("Панда", "М", "Ууу"), new Animal("Панда", "Ж", "Ууу") }));
+		}
+
+		private bool IsNumber(string inputUser)
+		{
+			return int.TryParse(inputUser, out int number);
+		}
 	}
 
 	class Aviary
 	{
-		private Animal _animal;
-		private int _countOfAnimal;
+		private List<Animal> _animals = new List<Animal>();
 
-		public Aviary(Animal animal, int count)
+		public Aviary(List<Animal> animal)
 		{
-			_animal = animal;
-			_countOfAnimal = count;
+			_animals = animal;
 		}
 
-		public string GetAnimalName()
+		public void GetAnimalName()
 		{
-			return _animal.Name;
+			for (int i = 0; i < _animals.Count; i++)
+			{
+				Console.Write(_animals[i].Name + " ");
+			}
 		}
 
 		public void ShowInfo()
 		{
-			_animal.ShowInfo();
-			Console.WriteLine($"В вальере всего {_countOfAnimal} особей.");
+			for (int i = 0; i < _animals.Count; i++)
+			{
+				_animals[i].ShowInfo();
+			}
+			Console.WriteLine($"В вальере всего {_animals.Count} особей.");
 		}
 	}
 
@@ -111,7 +117,7 @@ namespace Task12
 
 		public void ShowInfo()
 		{
-			Console.WriteLine($"В данном вальере обитают: {Name}, пол - {_gender}, издает звук - {_sound}");
+			Console.WriteLine($"В данном вальере обитает: {Name}, пол - {_gender}, издает звук - {_sound}");
 		}
 	}
 }
