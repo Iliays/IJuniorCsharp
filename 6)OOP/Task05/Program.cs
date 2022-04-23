@@ -23,11 +23,54 @@ namespace Task05
 class Library
 {
 	private List<Book> _books = new List<Book>();
-	private string _inputBookName;
-	private string _inputAuthorOfBook;
-	private int _inputYearOfRelease;
 
-	private void FillingData()
+	public void Work()
+	{
+		FillData();
+
+		bool isWorking = true;
+
+		while (isWorking)
+		{
+			Console.WriteLine("1) добавить книгу\n" +
+				"2) убрать книгу\n" +
+				"3) показать все книги\n" +
+				"4) показать книгу по названию\n" +
+				"5) показать книгу по автору\n" +
+				"6) показать книгу по году выпуска\n" +
+				"7) завершить работу");
+			string userInput = Console.ReadLine();
+
+			switch (userInput)
+			{
+				case "1":
+					AddNewBook();
+					break;
+				case "2":
+					RemoveBookByIndex();
+					break;
+				case "3":
+					ShowAllBooks();
+					break;
+				case "4":
+					ShowBooksByName();
+					break;
+				case "5":
+					ShowBooksByAuthor();
+					break;
+				case "6":
+					ShowBooksByYearOfRelease();
+					break;
+				case "7":
+					isWorking = false;
+					break;
+			}
+
+			Console.Clear();
+		}
+	}
+
+	private void FillData()
 	{
 		_books.Add(new Book("Евегений Онегин", "Пушкин", 1833));
 		_books.Add(new Book("Мертвые души", "Гоголь", 1842));
@@ -53,26 +96,24 @@ class Library
 
 	private void AddNewBook()
 	{
-		Console.WriteLine("Введите название книги:");
-		_inputBookName = Console.ReadLine();
-		Console.WriteLine("Введите автора книги:");
-		_inputAuthorOfBook = Console.ReadLine();
-		_inputYearOfRelease = GetNumber("Введите год выпуска книги:");
+		Console.WriteLine("Введите название книги: ");
+		string _inputBookName = Console.ReadLine();
+		Console.WriteLine("Введите автора книги: ");
+		string _inputAuthorOfBook = Console.ReadLine();
+		int _inputYearOfRelease = GetNumber("Введите год выпуска книги: ");
 
 		_books.Add(new Book(_inputBookName, _inputAuthorOfBook, _inputYearOfRelease));
 	}
 
-	private void RemoveBook()
+	private void RemoveBookByIndex()
 	{
-		Console.WriteLine("Введите название книги:");
-		_inputBookName = Console.ReadLine();
+		int _inputIndexOfBook = GetNumber("Введите номер книги: ");
 
 		for (int i = 0; i < _books.Count; i++)
 		{
-			if (_books[i].NameOfBook.ToLower() == _inputBookName.ToLower())
+			if (i == _inputIndexOfBook)
 			{
 				_books.RemoveAt(i);
-				i--;
 			}
 		}
 	}
@@ -87,10 +128,10 @@ class Library
 		Console.ReadKey();
 	}
 
-	private void SearchByNameOfBook()
+	private void ShowBooksByName()
 	{
-		Console.WriteLine("Введите название книги:");
-		_inputBookName = Console.ReadLine();
+		Console.WriteLine("Введите название книги: ");
+		string _inputBookName = Console.ReadLine();
 
 		for (int i = 0; i < _books.Count; i++)
 		{
@@ -103,10 +144,10 @@ class Library
 		Console.ReadKey();
 	}
 
-	private void SearchByAuthorOfBook()
+	private void ShowBooksByAuthor()
 	{
-		Console.WriteLine("Введите автора книги:");
-		_inputAuthorOfBook = Console.ReadLine();
+		Console.WriteLine("Введите автора книги: ");
+		string _inputAuthorOfBook = Console.ReadLine();
 
 		for (int i = 0; i < _books.Count; i++)
 		{
@@ -119,9 +160,9 @@ class Library
 		Console.ReadKey();
 	}
 
-	private void SearchYearOfRealese()
+	private void ShowBooksByYearOfRelease()
 	{
-		_inputYearOfRelease = GetNumber("Введите год выпуска книги:");
+		int _inputYearOfRelease = GetNumber("Введите год выпуска книги: ");
 
 		for (int i = 0; i < _books.Count; i++)
 		{
@@ -132,52 +173,6 @@ class Library
 		}
 
 		Console.ReadKey();
-	}
-
-	public void Work()
-	{
-		FillingData();
-
-		bool isWorking = true;
-
-		while (isWorking)
-		{
-			Console.WriteLine("1) добавить книгу\n" +
-				"2) убрать книгу\n" +
-				"3) показать все книги\n" +
-				"4) показать книгу по назвнию\n" +
-				"5) показать книгу по автору\n" +
-				"6) показать книгу по году выпуска\n" +
-				"7) завершить работу");
-			string userInput = Console.ReadLine();
-
-			switch (userInput)
-			{
-				case "1":
-					AddNewBook();
-					break;
-				case "2":
-					RemoveBook();
-					break;
-				case "3":
-					ShowAllBooks();
-					break;
-				case "4":
-					SearchByNameOfBook();
-					break;
-				case "5":
-					SearchByAuthorOfBook();
-					break;
-				case "6":
-					SearchYearOfRealese();
-					break;
-				case "7":
-					isWorking = false;
-					break;
-			}
-
-			Console.Clear();
-		}
 	}
 }
 
