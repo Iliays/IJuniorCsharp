@@ -104,9 +104,9 @@ namespace Task12
 
 	class Animal
 	{
-		public string Name { get; private set; }
 		private string _gender;
 		private string _sound;
+		public string Name { get; private set; }
 
 		public Animal(string name, string gender, string sound)
 		{
