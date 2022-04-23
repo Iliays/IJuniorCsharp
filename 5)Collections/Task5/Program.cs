@@ -13,7 +13,7 @@ namespace Task5
 			 */
 
 			string[] firstArray = { "Microsoft", "Google", "Apple", "Microsoft" };
-			string[] secondArray = { "Apple", "IBM", "Samsung", "Samsung", "Huawei" };
+			string[] secondArray = { "Microsoft", "Google", "Huawei", "Google", "Apple", "Microsoft" };
 			List<string> unionList = new List<string>();
 
 			unionList.AddRange(firstArray);
@@ -28,6 +28,7 @@ namespace Task5
 					if (currentElement == unionList[j] && i != j)
 					{
 						unionList.RemoveAt(j);
+						j--;
 					}
 				}
 			}
