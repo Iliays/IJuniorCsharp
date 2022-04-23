@@ -13,29 +13,26 @@ namespace Task5
 			 */
 
 			string[] firstArray = { "Microsoft", "Google", "Apple", "Microsoft" };
-			string[] secondArray = { "Microsoft", "Google", "Huawei", "Google", "Apple", "Microsoft" };
+			string[] secondArray = { "Microsoft", "Google", "Huawei", "Google", "Apple", "Microsoft", "IBM" };
 			List<string> unionList = new List<string>();
 
-			unionList.AddRange(firstArray);
-			unionList.AddRange(secondArray);
-
-			for (int i = 0; i < unionList.Count; i++)
-			{
-				var currentElement = unionList[i];
-
-				for (int j = 0; j < unionList.Count; j++)
-				{
-					if (currentElement == unionList[j] && i != j)
-					{
-						unionList.RemoveAt(j);
-						j--;
-					}
-				}
-			}
+			AddInList(unionList, firstArray);
+			AddInList(unionList, secondArray);
 
 			for (int i = 0; i < unionList.Count; i++)
 			{
 				Console.WriteLine(unionList[i]);
+			}
+		}
+
+		static void AddInList(List<string> unionList, string[] list)
+		{
+			for (int i = 0; i < list.Length; i++)
+			{
+				if (unionList.Contains(list[i]) == false)
+				{
+					unionList.Add(list[i]);
+				}
 			}
 		}
 	}
