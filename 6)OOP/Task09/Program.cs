@@ -35,16 +35,18 @@ namespace Task09
 
 		private void ServiceClients()
 		{
+			Console.WriteLine("Сумма покупки " + _clientsQueue.Peek().SumTotalPrice());
 			_clientsQueue.Peek().ShowProductsInBasket();
 
-			while (_clientsQueue.Peek().CheckEnoughMoney() != true)
+			while (_clientsQueue.Peek().CheckEnoughMoney(_clientsQueue.Peek().SumTotalPrice()) != true)
 			{
 				_clientsQueue.Peek().RemoveFromBasket();
 				_clientsQueue.Peek().ShowProductsInBasket();
 			}
 
-			if (_clientsQueue.Dequeue().CheckEnoughMoney())
+			if (_clientsQueue.Peek().CheckEnoughMoney(_clientsQueue.Peek().SumTotalPrice()))
 			{
+				_clientsQueue.Dequeue();
 				Console.WriteLine("Клиент оплатил и ушел\n\n");
 			}
 		}
@@ -71,7 +73,15 @@ namespace Task09
 			_basket = list;
 		}
 
-		public bool CheckEnoughMoney()
+		public bool CheckEnoughMoney(int totalPrice)
+		{
+			if (_money >= totalPrice)
+				return true;
+			else
+				return false;
+		}
+
+		public int SumTotalPrice()
 		{
 			int totalPrice = 0;
 
@@ -80,10 +90,7 @@ namespace Task09
 				totalPrice += _basket[i].ProductPrice;
 			}
 
-			if (_money >= totalPrice)
-				return true;
-			else
-				return false;
+			return totalPrice;
 		}
 
 		public void RemoveFromBasket()
@@ -96,6 +103,8 @@ namespace Task09
 
 		public void ShowProductsInBasket()
 		{
+			Console.WriteLine($"Денег у покупателя - {_money}");
+
 			foreach (var product in _basket)
 			{
 				product.ShowInfo();
