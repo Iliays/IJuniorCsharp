@@ -25,8 +25,8 @@ namespace Task10
 	class Battlefield
 	{
 		private Random _random = new Random();
-		private Platoon _platoonCountryBlack;
-		private Platoon _platoonCountryWhite;
+		private Platoon _platoonFirstCountry;
+		private Platoon _platoonSecondCountry;
 		private Soldier _firstSoldier;
 		private Soldier _secondSoldier;
 
@@ -34,14 +34,14 @@ namespace Task10
 		{
 			FillData();
 
-			while (_platoonCountryBlack.GetCountSoldiers() > 0 && _platoonCountryWhite.GetCountSoldiers() > 0)
+			while (_platoonFirstCountry.GetCountSoldiers() > 0 && _platoonSecondCountry.GetCountSoldiers() > 0)
 			{
-				_firstSoldier = _platoonCountryBlack.GetSoldierFromPlatoon();
-				_secondSoldier = _platoonCountryWhite.GetSoldierFromPlatoon();
-				_platoonCountryBlack.ShowPlatoon("Взвод страны Black:");
-				_platoonCountryWhite.ShowPlatoon("Взвод страны White:");
-				_firstSoldier.TakeDamage(_secondSoldier.Damage, "Взвод страны Black: ");
-				_secondSoldier.TakeDamage(_firstSoldier.Damage, "Взвод страны White: ");
+				_firstSoldier = _platoonFirstCountry.GetSoldier();
+				_secondSoldier = _platoonSecondCountry.GetSoldier();
+				_platoonFirstCountry.ShowSoldiers();
+				_platoonSecondCountry.ShowSoldiers();
+				_firstSoldier.TakeDamage(_secondSoldier.Damage, $"Боец взвода страны {_platoonFirstCountry.NameCountry}: ");
+				_secondSoldier.TakeDamage(_firstSoldier.Damage, $"Боец взвода страны {_platoonSecondCountry.NameCountry}: ");
 				_firstSoldier.ChanceUseSkill();
 				_secondSoldier.ChanceUseSkill();
 				RemoveSoldier();
@@ -52,30 +52,10 @@ namespace Task10
 			ShowBattleResult();
 		}
 
-		private void ShowBattleResult()
-		{
-			if (_platoonCountryBlack.GetCountSoldiers() == 0 && _platoonCountryWhite.GetCountSoldiers() == 0)
-			{
-				Console.WriteLine("Ничья, оба взвода погибли.");
-			}
-			else if (_platoonCountryBlack.GetCountSoldiers() > 0)
-			{
-				Console.WriteLine("Взвод страны Black победил!");
-			}
-			else if (_platoonCountryWhite.GetCountSoldiers() > 0)
-			{
-				Console.WriteLine("Взвод страны White победил!");
-			}
-
-			_platoonCountryBlack.ShowPlatoon("Взвод страны Black");
-			_platoonCountryWhite.ShowPlatoon("Взвод страны White");
-			Console.ReadKey();
-		}
-
 		private void FillData()
 		{
-			_platoonCountryBlack = new Platoon(CreateNewPlatoon(10, new List<Soldier>()));
-			_platoonCountryWhite = new Platoon(CreateNewPlatoon(10, new List<Soldier>()));
+			_platoonFirstCountry = new Platoon((CreateNewPlatoon(10, new List<Soldier>())), "Black");
+			_platoonSecondCountry = new Platoon((CreateNewPlatoon(10, new List<Soldier>())), "White");
 		}
 
 		private List<Soldier> CreateNewPlatoon(int countSoldiers, List<Soldier> soldiers)
@@ -112,40 +92,64 @@ namespace Task10
 		{
 			if (_firstSoldier.Health <= 0)
 			{
-				_platoonCountryBlack.RemoveSoldierFromPlatoon(_firstSoldier);
+				_platoonFirstCountry.RemoveSoldier(_firstSoldier);
 			}
 			if (_secondSoldier.Health <= 0)
 			{
-				_platoonCountryWhite.RemoveSoldierFromPlatoon(_secondSoldier);
+				_platoonSecondCountry.RemoveSoldier(_secondSoldier);
 			}
+		}
+
+		private void ShowBattleResult()
+		{
+			if (_platoonFirstCountry.GetCountSoldiers() == 0 && _platoonSecondCountry.GetCountSoldiers() == 0)
+			{
+				Console.WriteLine("Ничья, оба взвода погибли.");
+			}
+			else if (_platoonFirstCountry.GetCountSoldiers() > 0)
+			{
+				Console.WriteLine($"Взвод страны {_platoonFirstCountry.NameCountry} победил!");
+			}
+			else if (_platoonSecondCountry.GetCountSoldiers() > 0)
+			{
+				Console.WriteLine($"Взвод страны {_platoonSecondCountry.NameCountry} победил!");
+			}
+
+			_platoonFirstCountry.ShowSoldiers();
+			_platoonSecondCountry.ShowSoldiers();
+			Console.ReadKey();
 		}
 	}
 
 	class Platoon
 	{
+		public string NameCountry { get; private set; }
+
 		private List<Soldier> _soldiers = new List<Soldier>();
 		private Random _random = new Random();
-
-		public Platoon(List<Soldier> soldiers)
+		
+		public Platoon(List<Soldier> soldiers, string nameCountry)
 		{
 			_soldiers = soldiers;
+			NameCountry = nameCountry;
 		}
 
-		public void ShowPlatoon(string message)
+		public void ShowSoldiers()
 		{
-			Console.WriteLine(message);
+			Console.WriteLine($"Взвод страны {NameCountry}:");
+
 			foreach (var solider in _soldiers)
 			{
 				Console.WriteLine($"{solider.Name}. Здоровье: {solider.Health}. Урон: {solider.Damage}.");
 			}
 		}
 
-		public void RemoveSoldierFromPlatoon(Soldier soldier)
+		public void RemoveSoldier(Soldier soldier)
 		{
 			_soldiers.Remove(soldier);
 		}
 
-		public Soldier GetSoldierFromPlatoon()
+		public Soldier GetSoldier()
 		{
 			return _soldiers[_random.Next(0, _soldiers.Count)];
 		}
