@@ -29,46 +29,32 @@ namespace Task08
 		public void Battle()
 		{
 			FillData();
+			SelectWarriors();
+			Fight();
+			ShowBattleResult();
+		}
 
-			while (_firstWarrior == null || _secondWarrior == null)
-			{
-				if (_firstWarrior == null)
-				{
-					Console.WriteLine("Выбор первого бойца");
-					_firstWarrior = ChooseWarrior(_firstWarrior);
-				}
-				if (_secondWarrior == null)
-				{
-					Console.WriteLine("Выбор второго бойца");
-					_secondWarrior = ChooseWarrior(_secondWarrior);
-				}
-
-				Console.Clear();
-			}
-
+		private void Fight()
+		{
 			while (_firstWarrior.Health > 0 && _secondWarrior.Health > 0)
 			{
 				_firstWarrior.ShowStats();
 				_secondWarrior.ShowStats();
-				_firstWarrior.TakeDamage(_secondWarrior.Damage);
-				_secondWarrior.TakeDamage(_firstWarrior.Damage);
-				_firstWarrior.ChanceUseSkill();
-				_secondWarrior.ChanceUseSkill();
+				_firstWarrior.Attack(_secondWarrior);
+				_secondWarrior.Attack(_firstWarrior);
 
 				Console.ReadKey();
 				Console.WriteLine();
 			}
-
-			ShowBattleResult();
 		}
 
 		private void FillData()
 		{
-			_warriors.Add(new Knight("Knight", 60, 10, 10, 20));
-			_warriors.Add(new Barbarian("Barbarian", 70, 15, 5, 15));
-			_warriors.Add(new DarkKnight("DarkKnight", 50, 15, 10, 10));
-			_warriors.Add(new Paladin("Paladin", 80, 25, 10, 15));
-			_warriors.Add(new Assasin("Assasin", 40, 15, 5, 20));
+			_warriors.Add(new Knight("Knight", 100, 15, 10));
+			_warriors.Add(new Barbarian("Barbarian", 90, 20, 5));
+			_warriors.Add(new DarkKnight("DarkKnight", 100, 20, 10));
+			_warriors.Add(new Paladin("Paladin", 100, 25, 10));
+			_warriors.Add(new Assasin("Assasin", 70, 15, 5));
 		}
 
 		private void ShowWarriors()
@@ -82,27 +68,50 @@ namespace Task08
 			}
 		}
 
-		private Warrior ChooseWarrior(Warrior warrior)
+		private void SelectWarriors()
+		{
+			while (_firstWarrior == null || _secondWarrior == null)
+			{
+				if (_firstWarrior == null)
+				{
+					Console.WriteLine("Выбор первого бойца");
+					_firstWarrior = ChooseWarrior();
+				}
+				if (_secondWarrior == null)
+				{
+					Console.WriteLine("Выбор второго бойца");
+					_secondWarrior = ChooseWarrior();
+				}
+
+				Console.Clear();
+			}
+		}
+
+		private Warrior ChooseWarrior()
 		{
 			ShowWarriors();
+			Warrior warrior;
 			Console.Write("Введите индекс бойца: ");
 			bool isNumber = int.TryParse(Console.ReadLine(), out int inputIndex);
 
-			if (isNumber == false)
+			if (isNumber)
 			{
-				Console.WriteLine("Ошибка! Вы ввели некорректные данные.");
-				return null;
-			}
-			else if (inputIndex > 0 && inputIndex - 1 < _warriors.Count)
-			{
-				warrior = _warriors[inputIndex - 1];
-				_warriors.Remove(warrior);
-				Console.WriteLine("Боец успешно выбран.");
-				return warrior;
+				if (inputIndex > 0 && inputIndex - 1 < _warriors.Count)
+				{
+					warrior = _warriors[inputIndex - 1];
+					_warriors.Remove(warrior);
+					Console.WriteLine("Боец успешно выбран.");
+					return warrior;
+				}
+				else
+				{
+					Console.WriteLine("Боец с таким индексом не существует.");
+					return null;
+				}
 			}
 			else
 			{
-				Console.WriteLine("Боец с таким индексом не существует.");
+				Console.WriteLine("Ошибка! Вы ввели некорректные данные.");
 				return null;
 			}
 		}
@@ -121,6 +130,9 @@ namespace Task08
 			{
 				Console.WriteLine($"Победил боец - {_firstWarrior.Name}!");
 			}
+
+			_firstWarrior.ShowStats();
+			_secondWarrior.ShowStats();
 		}
 	}
 
@@ -130,33 +142,15 @@ namespace Task08
 		public float Health { get; protected set; }
 		public int Damage { get; protected set; }
 		public int Armor { get; protected set; }
-		public int SkillUseChance { get; protected set; }
 
-		public Warrior(string name, int health, int damage, int armor, int skillUseChance)
+		private Random _random = new Random();
+
+		public Warrior(string name, int health, int damage, int armor)
 		{
 			Name = name;
 			Health = health;
 			Damage = damage;
 			Armor = armor;
-			SkillUseChance = skillUseChance;
-		}
-		
-		public void TakeDamage(int damage)
-		{
-			float totalDamage = 0;
-			float absorbedDamage = 20;
-
-			if (Armor == 0)
-			{
-				Health -= damage;
-			}
-			else
-			{
-				totalDamage = damage / absorbedDamage * Armor;
-				Health -= totalDamage;
-			}
-
-			Console.WriteLine($"{Name} получил - {totalDamage} урона");
 		}
 
 		public void ShowStats()
@@ -164,87 +158,263 @@ namespace Task08
 			Console.WriteLine($"Имя бойца - {Name}.\nХарактеристики: {Health} здоровья, {Damage} урона, {Armor} защиты.");
 		}
 
-		public void ChanceUseSkill()
+		public virtual void TakeDamage(int damage)
 		{
-			Random random = new Random();
-			int maximumNumber = 100;
-			int chanceUsingSkill = random.Next(maximumNumber);
+			float totalDamage;
+			float absorbedDamage = 20;
+			int hundredPercent = 100;
 
-			if (chanceUsingSkill < SkillUseChance)
+			if (Armor == 0)
 			{
-				UseSkill();
+				Health -= damage - (damage / hundredPercent * absorbedDamage);
+				Console.WriteLine($"{Name} получил - {damage} урона");
+			}
+			else
+			{
+				totalDamage = damage - ((damage / hundredPercent * absorbedDamage) + Armor);
+
+				if (totalDamage < 0)
+				{
+					Console.WriteLine($"{Name} получил - 0 урона");
+				}
+				else
+				{
+					Health -= totalDamage;
+					Console.WriteLine($"{Name} получил - {totalDamage} урона");
+				}
 			}
 		}
 
-		protected virtual void UseSkill() { }
+		public virtual void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceCriticalDamage = _random.Next(maximumNumber);
+			int chanceCrit = 20;
+			int critDamage = 10;
+			int totalDamage;
+
+			if (chanceCriticalDamage <= chanceCrit)
+			{
+				totalDamage = Damage + critDamage;
+				warriorEnemy.TakeDamage(totalDamage);
+			}
+			else
+			{
+				warriorEnemy.TakeDamage(Damage);
+			}
+		}
 	}
 
 	class Knight : Warrior
 	{
-		private int _healthIncrese = 40;
+		private int _healthIncrese = 30;
+		private Random _random = new Random();
 
-		public Knight(string name, int health, int damage, int armor, int skillUseChance) : base(name, health, damage, armor, skillUseChance) { }
+		public Knight(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
-		protected override void UseSkill()
+		public override void TakeDamage(int damage)
 		{
-			Console.WriteLine($"{Name} ипользовал молитву. Здоровье увелечено");
-			Health += _healthIncrese;
+			int maximumNumber = 100;
+			int chanceUseBlock = _random.Next(maximumNumber);
+			int chanceBlock = 20;
+
+			if (chanceUseBlock <= chanceBlock)
+			{
+				Console.WriteLine($"{Name} заблокировал весь урон щитом.");
+			}
+			else
+			{
+				base.TakeDamage(damage);
+			}
+		}
+
+		public override void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceUseSkill = _random.Next(maximumNumber);
+			int chanceSkill = 15;
+
+			if(chanceUseSkill <= chanceSkill)
+			{
+				Console.WriteLine($"{Name} ипользовал молитву. Здоровье увелечено");
+				Health += _healthIncrese;
+			}
+			else
+			{
+				base.Attack(warriorEnemy);
+			}
 		}
 	}
 
 	class Barbarian : Warrior
 	{
 		private int _damageIncrease = 15;
+		private Random _random = new Random();
 
-		public Barbarian(string name, int health, int damage, int armor, int skillUseChance) : base(name, health, damage, armor, skillUseChance) { }
+		public Barbarian(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
-		protected override void UseSkill()
+		public override void TakeDamage(int damage)
 		{
-			Console.WriteLine($"{Name} ипользовал боевой клич. Урон увелечен.");
-			Damage += _damageIncrease;
+			int maximumNumber = 100;
+			int chanceDodgeAttack = _random.Next(maximumNumber);
+			int chanceDodge = 15;
+
+			if (chanceDodgeAttack <= chanceDodge)
+			{
+				Console.WriteLine($"{Name} уклонился от атаки.");
+			}
+			else
+			{
+				base.TakeDamage(damage);
+			}
+		}
+
+		public override void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceUseSkill = _random.Next(maximumNumber);
+			int chanceSkill = 15;
+
+			if (chanceUseSkill <= chanceSkill)
+			{
+				Console.WriteLine($"{Name} ипользовал боевой клич. Урон увелечен и резво наносит две атаки.");
+				Damage += _damageIncrease;
+				warriorEnemy.TakeDamage(Damage);
+				warriorEnemy.TakeDamage(Damage);
+			}
+			else
+			{
+				base.Attack(warriorEnemy);
+			}
 		}
 	}
 
 	class DarkKnight : Warrior
 	{
-		private int _damageIncrease = 15;
-		private int _armorIncrease = 10;
+		private int _damageIncrease = 30;
+		private int _armorIncrease = 5;
+		private int _healthDecrease = 10;
+		private Random _random = new Random();
 
-		public DarkKnight(string name, int health, int damage, int armor, int skillUseChance) : base(name, health, damage, armor, skillUseChance) { }
+		public DarkKnight(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
-		protected override void UseSkill()
+		public override void TakeDamage(int damage)
 		{
-			Console.WriteLine($"{Name} ипользовал силу тьмы. Урон и броня увеличины.");
-			Armor += _armorIncrease;
-			Damage += _damageIncrease;
+			int maximumNumber = 100;
+			int chanceUseBlock = _random.Next(maximumNumber);
+			int chanceBlock = 20;
+
+			if (chanceUseBlock <= chanceBlock)
+			{
+				Console.WriteLine($"{Name} заблокировал весь урон щитом.");
+			}
+			else
+			{
+				base.TakeDamage(damage);
+			}
+		}
+
+		public override void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceUseSkill = _random.Next(maximumNumber);
+			int chanceSkill = 15;
+
+			if (chanceUseSkill <= chanceSkill)
+			{
+				Armor += _armorIncrease;
+				Damage += _damageIncrease;
+				Health -= _healthDecrease;
+				Console.WriteLine($"{Name} ипользовал силу тьмы. Урон и броня увеличины. Но теряет 10 единиц жизни.");
+			}
+			else
+			{
+				base.Attack(warriorEnemy);
+			}
 		}
 	}
 
 	class Paladin : Warrior
 	{
-		private int _healthIncrese = 80;
-		private int _armorIncrease = 10;
+		private Random _random = new Random();
 
-		public Paladin(string name, int health, int damage, int armor, int skillUseChance) : base(name, health, damage, armor, skillUseChance) { }
+		public Paladin(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
-		protected override void UseSkill()
+		public override void TakeDamage(int damage)
 		{
-			Console.WriteLine($"{Name} ипользовал силу света. Здоровье и броня увеличины.");
-			Health += _healthIncrese;
-			Armor += _armorIncrease;
+			int maximumNumber = 100;
+			int chanceUseBlock = _random.Next(maximumNumber);
+			int chanceBlock = 30;
+
+			if (chanceUseBlock <= chanceBlock)
+			{
+				Console.WriteLine($"{Name} заблокировал весь урон щитом.");
+			}
+			else
+			{
+				base.TakeDamage(damage);
+			}
+		}
+
+		public override void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceUseSkill = _random.Next(maximumNumber);
+			int chanceSkill = 15;
+			int lightPowerDamageMultiply = 3;
+
+			if (chanceUseSkill <= chanceSkill)
+			{
+				Console.WriteLine($"{Name} ипользовал силу света. Наносит урон в трехкратном размере.");
+				warriorEnemy.TakeDamage(Damage * lightPowerDamageMultiply);
+			}
+			else
+			{
+				base.Attack(warriorEnemy);
+			}
 		}
 	}
 
 	class Assasin : Warrior
 	{
 		private int _damageIncrease = 20;
+		private Random _random = new Random();
 
-		public Assasin(string name, int health, int damage, int armor, int skillUseChance) : base(name, health, damage, armor, skillUseChance) { }
+		public Assasin(string name, int health, int damage, int armor) : base(name, health, damage, armor) { }
 
-		protected override void UseSkill()
+		public override void TakeDamage(int damage)
 		{
-			Console.WriteLine($"{Name} ипользовал яд на кинжалы. Урон увеличился.");
-			Damage += _damageIncrease;
+			int maximumNumber = 100;
+			int chanceDodgeAttack = _random.Next(maximumNumber);
+			int chanceDodge = 30;
+
+			if (chanceDodgeAttack <= chanceDodge)
+			{
+				Console.WriteLine($"{Name} уклонился от атаки.");
+			}
+			else
+			{
+				base.TakeDamage(damage);
+			}
+		}
+
+		public override void Attack(Warrior warriorEnemy)
+		{
+			int maximumNumber = 100;
+			int chanceUseSkill = _random.Next(maximumNumber);
+			int chanceSkill = 15;
+			int spineDamageMultiply = 2;
+
+			if (chanceUseSkill <= chanceSkill)
+			{
+				Damage += _damageIncrease;
+				Console.WriteLine($"{Name} ипользовал яд на кинжалы. Урон увеличился. И моментально наносит удар в спину врага.");
+				warriorEnemy.TakeDamage(Damage * spineDamageMultiply);
+			}
+			else
+			{
+				base.Attack(warriorEnemy);
+			}
 		}
 	}
 }
