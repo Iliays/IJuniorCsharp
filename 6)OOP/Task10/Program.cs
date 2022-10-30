@@ -40,8 +40,8 @@ namespace Task10
 				_secondSoldier = _platoonSecondCountry.GetSoldier();
 				_platoonFirstCountry.ShowSoldiers();
 				_platoonSecondCountry.ShowSoldiers();
-				_firstSoldier.TakeDamage(_secondSoldier.Damage, $"Боец взвода страны {_platoonFirstCountry.NameCountry}: ");
-				_secondSoldier.TakeDamage(_firstSoldier.Damage, $"Боец взвода страны {_platoonSecondCountry.NameCountry}: ");
+				_firstSoldier.TakeDamage(_secondSoldier.Damage, $"Боец взвода страны {_platoonFirstCountry.CountryName}: ");
+				_secondSoldier.TakeDamage(_firstSoldier.Damage, $"Боец взвода страны {_platoonSecondCountry.CountryName}: ");
 				_firstSoldier.ChanceUseSkill();
 				_secondSoldier.ChanceUseSkill();
 				RemoveSoldier();
@@ -108,11 +108,11 @@ namespace Task10
 			}
 			else if (_platoonFirstCountry.GetCountSoldiers() > 0)
 			{
-				Console.WriteLine($"Взвод страны {_platoonFirstCountry.NameCountry} победил!");
+				Console.WriteLine($"Взвод страны {_platoonFirstCountry.CountryName} победил!");
 			}
 			else if (_platoonSecondCountry.GetCountSoldiers() > 0)
 			{
-				Console.WriteLine($"Взвод страны {_platoonSecondCountry.NameCountry} победил!");
+				Console.WriteLine($"Взвод страны {_platoonSecondCountry.CountryName} победил!");
 			}
 
 			_platoonFirstCountry.ShowSoldiers();
@@ -123,20 +123,20 @@ namespace Task10
 
 	class Platoon
 	{
-		public string NameCountry { get; private set; }
-
 		private List<Soldier> _soldiers = new List<Soldier>();
 		private Random _random = new Random();
+
+		public string CountryName { get; private set; }
 		
-		public Platoon(List<Soldier> soldiers, string nameCountry)
+		public Platoon(List<Soldier> soldiers, string countryName)
 		{
 			_soldiers = soldiers;
-			NameCountry = nameCountry;
+			CountryName = countryName;
 		}
 
 		public void ShowSoldiers()
 		{
-			Console.WriteLine($"Взвод страны {NameCountry}:");
+			Console.WriteLine($"Взвод страны {CountryName}:");
 
 			foreach (var solider in _soldiers)
 			{

@@ -25,8 +25,7 @@ namespace Task07
 
 	class Station
 	{
-		private List<Direction> _direction = new List<Direction>();
-		private List<Train> _train = new List<Train>();
+		private List<Train> _trains = new List<Train>();
 		private Random _random = new Random();
 
 		public void Work()
@@ -36,26 +35,26 @@ namespace Task07
 			while (isWorking)
 			{
 				ShowInfo();
-				CreateDirection();
+				Direction direction = CreateDirection();
 				int passengerCount = SellTickets();
-				CreateTrain(passengerCount);
+				CreateTrain(passengerCount, direction);
 				Console.ReadKey();
 				Console.Clear();
 			}
 		}
 
-		private void CreateDirection()
+		private Direction CreateDirection()
 		{
 			string pointFrom;
 			string pointWhere;
-
 			Console.WriteLine("!!!Выбор пункта отбытия и прибытия!!!");
 			pointFrom = GetText("Введите пункт отбытия: ");
 			pointWhere = GetText("Введите пункт прибытия: ");
 			Console.WriteLine("----------------------------------------------------------------------------------------------------");
 			Console.WriteLine("!!!Направление создано!!!");
 			Console.WriteLine($"Пункт отбытия - {pointFrom}. Пункт прибытия - {pointWhere}");
-			_direction.Add(new Direction(pointFrom, pointWhere));
+
+			return new Direction(pointFrom, pointWhere);
 		}
 
 		private string GetText(string message)
@@ -67,12 +66,12 @@ namespace Task07
 				Console.Write(message);
 				inputUser = Console.ReadLine();
 			}
-			while (CheckInputText(inputUser) == false);
+			while (IsText(inputUser) == false);
 
 			return inputUser;
 		}
 
-		private bool CheckInputText(string inputText)
+		private bool IsText(string inputText)
 		{
 			foreach (char symbol in inputText)
 			{
@@ -86,30 +85,34 @@ namespace Task07
 			return true;
 		}
 
-		private void CreateTrain(int passengerCount)
+		private void CreateTrain(int passengerCount, Direction direction)
 		{
 			int minimumRailwayCar = 5;
 			int maximumRailwayCar = 20;
 			int minimumCapacity = 10;
 			int maximumCapacity = 30;
-			int trainCount = 0;
-			int trainCapacity = 0;
+			int wagonCount = 0;
+			int wagonCapacity = 0;
 
+			Console.WriteLine("----------------------------------------------------------------------------------------------------");
+			Console.WriteLine("Продажа билетов");
+			Console.WriteLine($"{passengerCount} - человек купило билеты.");
 			Console.WriteLine("----------------------------------------------------------------------------------------------------");
 			Console.WriteLine("!!!Создание поезда!!!");
 
 			do
 			{
-				Console.WriteLine($"Необходимо {passengerCount} мест. Сейчас {trainCount * trainCapacity}");
-				trainCount = GetNumber("Введите количество вагонов: ", maximumRailwayCar, minimumRailwayCar);
-				trainCapacity = GetNumber("Введите количество мест в вагоне: ", maximumCapacity, minimumCapacity);
+				Console.WriteLine($"Необходимо {passengerCount} мест. Сейчас {wagonCount * wagonCapacity}");
+				wagonCount = GetNumber("Введите количество вагонов: ", maximumRailwayCar, minimumRailwayCar);
+				wagonCapacity = GetNumber("Введите количество мест в вагоне: ", maximumCapacity, minimumCapacity);
 			}
-			while (trainCount * trainCapacity <= passengerCount);
+			while (wagonCount * wagonCapacity < passengerCount);
 
 			Console.WriteLine("!!!Поезд создан!!!");
-			Console.WriteLine($"Количество вагонов - {trainCount}. Количество мест в вагонах - {trainCapacity}");
-			Console.WriteLine($"Итого {trainCount * trainCapacity} мест");
-			_train.Add(new Train(trainCount, trainCapacity));
+			Console.WriteLine($"Количество вагонов - {wagonCount}. Количество мест в вагонах - {wagonCapacity}");
+			Console.WriteLine($"Итого {wagonCount * wagonCapacity} мест");
+
+			_trains.Add(new Train(wagonCount, wagonCapacity, direction));
 		}
 
 		private int GetNumber(string message, int maximum, int minimum)
@@ -132,29 +135,18 @@ namespace Task07
 
 		private int SellTickets()
 		{
-			Console.WriteLine("----------------------------------------------------------------------------------------------------");
-			Console.WriteLine("Продажа билетов");
-			int passengerCount = GetPassagerCount();
-			Console.WriteLine($"{passengerCount} - человек купило билеты.");
-
-			return passengerCount;
-		}
-
-		private int GetPassagerCount()
-		{
 			int minimumCountPassager = 40;
 			int maximumCountPassager = 140;
-			int countPassager = _random.Next(minimumCountPassager, maximumCountPassager);
 
-			return countPassager;
+			return _random.Next(minimumCountPassager, maximumCountPassager);
 		}
 
 		private void ShowInfo()
 		{
-			for (int i = 0; i < _direction.Count; i++)
+			for (int i = 0; i < _trains.Count; i++)
 			{
 				Console.WriteLine("----------------------------------------------------------------------------------------------------");
-				Console.WriteLine($"Пункт отбытия - {_direction[i].PointFrom}. Пункт прибытия - {_direction[i].PointWhere}");
+				Console.WriteLine($"Пункт отбытия - {_trains[i].Direction.PointFrom}. Пункт прибытия - {_trains[i].Direction.PointWhere}");
 				Console.WriteLine("----------------------------------------------------------------------------------------------------");
 			}
 		}
@@ -174,13 +166,15 @@ namespace Task07
 
 	class Train
 	{
-		public int TrainCount { get; private set; }
-		public int TrainСapacity { get; private set; }
+		public int WagonCount { get; private set; }
+		public int WagonСapacity { get; private set; }
+		public Direction Direction { get; private set; }
 
-		public Train(int trainCount, int trainCapacity)
+		public Train(int wagonCount, int wagonCapacity, Direction direction)
 		{
-			TrainCount = trainCount;
-			TrainСapacity = trainCapacity;
+			WagonCount = wagonCount;
+			WagonСapacity = wagonCapacity;
+			Direction = direction;
 		}
 	}
 }
