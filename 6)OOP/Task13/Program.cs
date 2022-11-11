@@ -50,18 +50,12 @@ namespace Task13
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
-				switch (userInput)
-				{
-					case "1":
-						ServiceСar();
-						break;
-					case "2":
-						isWorking = false;
-						break;
-					default:
-						Console.WriteLine("Такой команды несуществует.");
-						break;
-				}
+				if (userInput == "1")
+					ServiceСar();
+				else if (userInput == "2")
+					isWorking = false;
+				else
+					Console.WriteLine("Такой команды несуществует.");
 			}
 		}
 
@@ -77,18 +71,18 @@ namespace Task13
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
-				switch (userInput)
+				if (userInput == "1")
 				{
-					case "1":
-						RepairCar(_carQueue.Dequeue());
-						break;
-					case "2":
-						_carQueue.Dequeue();
-						DenyService();
-						break;
-					default:
-						Console.WriteLine("Такой команды несуществует.");
-						break;
+					RepairCar(_carQueue.Dequeue());
+				}
+				else if (userInput == "2")
+				{
+					_carQueue.Dequeue();
+					DenyService();
+				}
+				else
+				{
+					Console.WriteLine("Такой команды несуществует.");
 				}
 
 				Console.ReadKey();
@@ -151,9 +145,7 @@ namespace Task13
 			for (int i = 0; i < _storage.Count; i++)
 			{
 				if (_storage[i].GetDetailName() == car.BrokenDetail)
-				{
 					repairPrice += _storage[i].GetDetailCost() + _costWork;
-				}
 			}
 
 			return repairPrice;
