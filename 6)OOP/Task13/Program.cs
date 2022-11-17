@@ -31,12 +31,16 @@ namespace Task13
 		private int _moneyBalance = 1000;
 		private int _penalty = 200;
 		private int _costWork = 100;
-		private List<Storage> _storage = new List<Storage>();
+		private List<Cell> _storage = new List<Cell>();
 		private Queue<Car> _carQueue = new Queue<Car>();
+		private List<string> _detailList = new List<string>();
 		private Random _random = new Random();
+		
 
 		public void Work()
 		{
+			const string CommandServiceClient = "1";
+			const string CommandStopWork = "2";
 			bool isWorking = true;
 
 			FillData();
@@ -45,14 +49,14 @@ namespace Task13
 			{
 				ShowStorage();
 				Console.WriteLine($"\nБаланс автомастерской - {_moneyBalance}.");
-				Console.WriteLine("1) Обслужить клиента\n" +
-					"2) Завершить работу" +
+				Console.WriteLine("1) Обслужить клиента" +
+					"\n2) Завершить работу" +
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
-				if (userInput == "1")
+				if (userInput == CommandServiceClient)
 					ServiceСar();
-				else if (userInput == "2")
+				else if (userInput == CommandStopWork)
 					isWorking = false;
 				else
 					Console.WriteLine("Такой команды несуществует.");
@@ -61,6 +65,9 @@ namespace Task13
 
 		private void ServiceСar()
 		{
+			const string CommandRepairCar = "1";
+			const string CommandDenyClient = "2";
+
 			if (_carQueue.Count > 0)
 			{
 				Console.Clear();
@@ -71,11 +78,11 @@ namespace Task13
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
-				if (userInput == "1")
+				if (userInput == CommandRepairCar)
 				{
 					RepairCar(_carQueue.Dequeue());
 				}
-				else if (userInput == "2")
+				else if (userInput == CommandDenyClient)
 				{
 					_carQueue.Dequeue();
 					DenyService();
@@ -96,9 +103,11 @@ namespace Task13
 
 		private void FillData()
 		{
-			_storage.Add(new Storage(new Detail("Двигатель", 200), 2));
-			_storage.Add(new Storage(new Detail("Фары", 100), 4));
-			_storage.Add(new Storage(new Detail("Колесо", 50), 5));
+			_storage.Add(new Cell(new Detail("Двигатель", 200), 2));
+			_storage.Add(new Cell(new Detail("Фары", 100), 4));
+			_storage.Add(new Cell(new Detail("Колесо", 50), 5));
+
+			FillDetailList();
 
 			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
 			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
@@ -110,21 +119,23 @@ namespace Task13
 		private string GetRandomNameDetail()
 		{
 			int minimumNumberDetail = 0;
-			int maximumNumberDetail = 2;
-			int number = _random.Next(minimumNumberDetail, maximumNumberDetail);
+			int number = _random.Next(minimumNumberDetail, _detailList.Count);
+			return _detailList[number];
+		}
 
-			if (number == 0)
-				return "Двигатель";
-			else if (number == 1)
-				return "Фары";
-			else
-				return "Колесо";
+		private List<string> FillDetailList()
+		{
+			foreach (var cell in _storage)
+			{
+				_detailList.Add(cell._detail.Name);
+			}
+			return _detailList;
 		}
 
 		private void ShowBreakdown(Car car)
 		{
 			Console.WriteLine($"У машины сломано - {car.BrokenDetail}.");
-			Console.WriteLine($"\nСтоимость работы = {GetRepairPrice(car)}.");
+			Console.WriteLine($"\nСтоимость работы = {GetRepairPrice(car.BrokenDetail)}.");
 		}
 
 		private void ShowStorage()
@@ -138,14 +149,17 @@ namespace Task13
 			}
 		}
 
-		private int GetRepairPrice(Car car)
+		private int GetRepairPrice(string brokenDetail)
 		{
 			int repairPrice = 0;
 
 			for (int i = 0; i < _storage.Count; i++)
 			{
-				if (_storage[i].GetDetailName() == car.BrokenDetail)
-					repairPrice += _storage[i].GetDetailCost() + _costWork;
+				if (_storage[i]._detail.Name == brokenDetail)
+				{
+					repairPrice += _storage[i]._detail.Cost + _costWork;
+					return repairPrice;
+				}
 			}
 
 			return repairPrice;
@@ -160,20 +174,22 @@ namespace Task13
 		private void RepairCar(Car car)
 		{
 			ShowStorage();
-			int userInput = GetNumber("Какую деталь вы желаете установить: ");
+			int userInput = GetExistDetailNumber("Какую деталь вы желаете установить: ");
+			int repairPrice = GetRepairPrice(car.BrokenDetail);
 
 			if (CanRepairCar(userInput))
 			{
-				if (userInput > 0 && userInput - 1 < _storage.Count && car.BrokenDetail == _storage[userInput - 1].GetDetailName())
+				_storage[userInput - 1].DecreaseCountDetail();
+				if (userInput > 0 && userInput - 1 < _storage.Count && car.BrokenDetail == _storage[userInput - 1]._detail.Name)
 				{
-					Console.WriteLine($"Вы успешно починили автомобиль!\n И заработали {GetRepairPrice(car)} рублей.");
-					_moneyBalance += GetRepairPrice(car);
+					Console.WriteLine($"Вы успешно починили автомобиль!\n И заработали {repairPrice} рублей.");
+					_moneyBalance += repairPrice;
 				}
 				else
 				{
 					Console.WriteLine("Вы установили не ту деталь. Клиент не доволен вашей работой. " +
-					 $"\nВы возместили ущерб клиенту в размере - {GetRepairPrice(car)} рублей.");
-					_moneyBalance -= GetRepairPrice(car);
+					 $"\nВы возместили ущерб клиенту в размере - {repairPrice} рублей.");
+					_moneyBalance -= repairPrice;
 				}
 			}
 			else
@@ -187,17 +203,12 @@ namespace Task13
 		private bool CanRepairCar(int detailNumber)
 		{
 			if (_storage[detailNumber - 1].CanDecreaseCountDetail())
-			{
 				return true;
-			}
 			else
-			{
-				_storage.Remove(_storage[detailNumber - 1]);
 				return false;
-			}
 		}
 
-		private int GetNumber(string message)
+		private int GetExistDetailNumber(string message)
 		{
 			int number;
 			string inputUser;
@@ -225,38 +236,28 @@ namespace Task13
 		}
 	}
 
-	class Storage
+	class Cell
 	{
-		private Detail _detail;
+		public Detail _detail { get; private set; }
 		private int _countOfDetails;
 
-		public Storage(Detail detail, int count)
+		public Cell(Detail detail, int count)
 		{
 			_detail = detail;
 			_countOfDetails = count;
 		}
 
-		public string GetDetailName()
-		{
-			return _detail.Name;
-		}
-
-		public int GetDetailCost()
-		{
-			return _detail.Cost;
-		}
-
 		public bool CanDecreaseCountDetail()
 		{
 			if (_countOfDetails > 0)
-			{
-				_countOfDetails--;
 				return true;
-			}
 			else
-			{
 				return false;
-			}
+		}
+
+		public void DecreaseCountDetail()
+		{
+			_countOfDetails--;
 		}
 
 		public void ShowInfo()
