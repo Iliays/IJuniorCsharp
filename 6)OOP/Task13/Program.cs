@@ -33,24 +33,25 @@ namespace Task13
 		private int _costWork = 100;
 		private List<Cell> _storage = new List<Cell>();
 		private Queue<Car> _carQueue = new Queue<Car>();
-		private List<string> _detailList = new List<string>();
 		private Random _random = new Random();
 		
-
 		public void Work()
 		{
 			const string CommandServiceClient = "1";
+			const string CommandServiceClientText = "Обслужить клиента";
 			const string CommandStopWork = "2";
+			const string CommandStopWorkText = "Завершить работу";
 			bool isWorking = true;
 
-			FillData();
+			FillStorage();
+			FillCarQueue(5);
 
 			while (isWorking)
 			{
 				ShowStorage();
 				Console.WriteLine($"\nБаланс автомастерской - {_moneyBalance}.");
-				Console.WriteLine("1) Обслужить клиента" +
-					"\n2) Завершить работу" +
+				Console.WriteLine($"{CommandServiceClient} - {CommandServiceClientText}" +
+					$"\n{CommandStopWork} - {CommandStopWorkText}" +
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
@@ -66,15 +67,17 @@ namespace Task13
 		private void ServiceСar()
 		{
 			const string CommandRepairCar = "1";
+			const string CommandRepairCarText = "Ремонтировать";
 			const string CommandDenyClient = "2";
+			const string CommandDenyClientText = "Отказать клиенту";
 
 			if (_carQueue.Count > 0)
 			{
 				Console.Clear();
 				ShowBreakdown(_carQueue.Peek());
 				Console.Write("Что вы будете делать. " +
-					"\n1) Ремонтировать " +
-					"\n2) Отказать клиенту " +
+					$"\n{CommandRepairCar} - {CommandRepairCarText}" +
+					$"\n{CommandDenyClient} - {CommandDenyClientText}" +
 					"\nДействие: ");
 				string userInput = Console.ReadLine();
 
@@ -101,35 +104,24 @@ namespace Task13
 			}
 		}
 
-		private void FillData()
+		private void FillStorage()
 		{
 			_storage.Add(new Cell(new Detail("Двигатель", 200), 2));
 			_storage.Add(new Cell(new Detail("Фары", 100), 4));
-			_storage.Add(new Cell(new Detail("Колесо", 50), 5));
+			_storage.Add(new Cell(new Detail("Колесо", 50), 5));			
+		}
 
-			FillDetailList();
-
-			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
-			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
-			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
-			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
-			_carQueue.Enqueue(new Car(GetRandomNameDetail()));
+		private void FillCarQueue(int count)
+		{
+			for (int i = 0; i < count; i++)
+			{
+				_carQueue.Enqueue(new Car(GetRandomNameDetail()));
+			}
 		}
 
 		private string GetRandomNameDetail()
 		{
-			int minimumNumberDetail = 0;
-			int number = _random.Next(minimumNumberDetail, _detailList.Count);
-			return _detailList[number];
-		}
-
-		private List<string> FillDetailList()
-		{
-			foreach (var cell in _storage)
-			{
-				_detailList.Add(cell._detail.Name);
-			}
-			return _detailList;
+			return _storage[_random.Next(_storage.Count)].Detail.Name;
 		}
 
 		private void ShowBreakdown(Car car)
@@ -155,9 +147,9 @@ namespace Task13
 
 			for (int i = 0; i < _storage.Count; i++)
 			{
-				if (_storage[i]._detail.Name == brokenDetail)
+				if (_storage[i].Detail.Name == brokenDetail)
 				{
-					repairPrice += _storage[i]._detail.Cost + _costWork;
+					repairPrice = _storage[i].Detail.Cost + _costWork;
 					return repairPrice;
 				}
 			}
@@ -180,9 +172,9 @@ namespace Task13
 			if (CanRepairCar(userInput))
 			{
 				_storage[userInput - 1].DecreaseCountDetail();
-				if (userInput > 0 && userInput - 1 < _storage.Count && car.BrokenDetail == _storage[userInput - 1]._detail.Name)
+				if (userInput > 0 && userInput - 1 < _storage.Count && car.BrokenDetail == _storage[userInput - 1].Detail.Name)
 				{
-					Console.WriteLine($"Вы успешно починили автомобиль!\n И заработали {repairPrice} рублей.");
+					Console.WriteLine($"Вы успешно починили автомобиль!\nИ заработали {repairPrice} рублей.");
 					_moneyBalance += repairPrice;
 				}
 				else
@@ -202,10 +194,7 @@ namespace Task13
 
 		private bool CanRepairCar(int detailNumber)
 		{
-			if (_storage[detailNumber - 1].CanDecreaseCountDetail())
-				return true;
-			else
-				return false;
+			return (_storage[detailNumber - 1].CanDecreaseCountDetail());
 		}
 
 		private int GetExistDetailNumber(string message)
@@ -238,21 +227,19 @@ namespace Task13
 
 	class Cell
 	{
-		public Detail _detail { get; private set; }
 		private int _countOfDetails;
 
+		public Detail Detail { get; private set; }
+		
 		public Cell(Detail detail, int count)
 		{
-			_detail = detail;
+			Detail = detail;
 			_countOfDetails = count;
 		}
 
 		public bool CanDecreaseCountDetail()
 		{
-			if (_countOfDetails > 0)
-				return true;
-			else
-				return false;
+			return _countOfDetails > 0;
 		}
 
 		public void DecreaseCountDetail()
@@ -262,7 +249,7 @@ namespace Task13
 
 		public void ShowInfo()
 		{
-			Console.WriteLine($"Деталь - {_detail.Name}. Цена - {_detail.Cost}. Количество - {_countOfDetails}.");
+			Console.WriteLine($"Деталь - {Detail.Name}. Цена - {Detail.Cost}. Количество - {_countOfDetails}.");
 		}
 	}
 
